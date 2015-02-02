@@ -6,6 +6,7 @@ void ButterDish::build(void* data){
     glGenBuffers(1, &vertex_buffer);
     glGenBuffers(1, &index_buffer);
     vec3 v1;
+    // +y side
     v1 = {-TOP_LENGTH/2, TOP_WIDTH/2, HEIGHT/2};
     all_index.push_back(all_points.size());
     all_points.push_back(v1);
@@ -18,6 +19,33 @@ void ButterDish::build(void* data){
     v1 = {TOP_LENGTH/2, TOP_WIDTH/2, -HEIGHT/2};
     all_index.push_back(all_points.size());
     all_points.push_back(v1);
+    // +x side
+    v1 = {TOP_LENGTH/2, -TOP_WIDTH/2, HEIGHT/2};
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
+    v1 = {TOP_LENGTH/2, -TOP_WIDTH/2, -HEIGHT/2};
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
+    // -y side
+    v1 = {-TOP_LENGTH/2, -TOP_WIDTH/2, HEIGHT/2};
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
+    v1 = {-TOP_LENGTH/2, -TOP_WIDTH/2, -HEIGHT/2};
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
+    // -x side
+    all_index.push_back(0);
+    all_index.push_back(1);
+    // top
+    all_index.push_back(0);
+    all_index.push_back(2);
+    all_index.push_back(6);
+    all_index.push_back(4);
+    // bottom
+    all_index.push_back(1);
+    all_index.push_back(3);
+    all_index.push_back(7);
+    all_index.push_back(5);
 
     side_count = all_index.size();
 
@@ -53,9 +81,35 @@ void ButterDish::render(bool outline) const{
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
     /* render the polygon */
     glPolygonMode(GL_FRONT, GL_FILL);
-    glFrontFace(GL_CCW);
+    glFrontFace(GL_CW);
     glColor3ub (255, 0, 0);
-    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, side_count, GL_UNSIGNED_SHORT, 0);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, 0);
+
+    glPolygonMode(GL_FRONT, GL_FILL);
+    glFrontFace(GL_CW);
+    glColor3ub (225, 0, 0);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (2)));
+
+    glPolygonMode(GL_FRONT, GL_FILL);
+    glFrontFace(GL_CW);
+    glColor3ub (195, 0, 0);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (2*2)));
+
+    glPolygonMode(GL_FRONT, GL_FILL);
+    glFrontFace(GL_CW);
+    glColor3ub (165, 0, 0);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (2*3)));
+
+    glPolygonMode(GL_FRONT, GL_FILL);
+    glFrontFace(GL_CW);
+    glColor3ub (135, 0, 0);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (side_count - 8)));
+
+    glPolygonMode(GL_FRONT, GL_FILL);
+    glFrontFace(GL_CCW);
+    glColor3ub (105, 0, 0);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (side_count - 4)));
+
 
     /* unbind the buffers */
     glBindBuffer(GL_ARRAY_BUFFER, 0);

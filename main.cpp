@@ -55,7 +55,7 @@ void win_resize (GLFWwindow * win, int width, int height)
 
     /* near-plane(1) & far-plane(10) are always POSITIVE and they measure
      * the distances along the Z-axis in front of the camera */
-    gluPerspective(60.0, static_cast<float> (width)/ static_cast<float> (height), 1, 20);
+    gluPerspective(90.0, static_cast<float> (width)/ static_cast<float> (height), 1, 40);
 }
 
 void make_model(){
@@ -86,38 +86,7 @@ void win_refresh (GLFWwindow *win) {
     glVertex3f (0, 0, S * 1.1);
     glEnd();
 
-    /* The following two groups of GL_LINE_LOOP and GL_LINES draw the square block
-     * whose 4 vertices make the tetrahedron */
-    glColor3ub (255, 0, 0);
-    glBegin(GL_LINE_LOOP);
-    glVertex3f(S, S, S);
-    glVertex3f(-S, S, S);
-    glVertex3f(-S, -S, S);
-    glVertex3f(S, -S, S);
-    glEnd();
-    glBegin(GL_LINE_LOOP);
-    glVertex3f(S, S, -S);
-    glVertex3f(-S, S, -S);
-    glVertex3f(-S, -S, -S);
-    glVertex3f(S, -S, -S);
-    glEnd();
 
-    glBegin(GL_LINES);
-    glVertex3f(S, S, S);
-    glVertex3f(S, S, -S);
-    glVertex3f(-S, S, S);
-    glVertex3f(-S, S, -S);
-    glVertex3f(-S, -S, S);
-    glVertex3f(-S, -S, -S);
-    glVertex3f(S, -S, S);
-    glVertex3f(S, -S, -S);
-    glEnd();
-
-    glPushMatrix();
-    glTranslatef(S, S, -S);
-    glRotatef(-45, 1, 0, 0);
-
-    glPopMatrix();
 
     glPushMatrix();
     one.render(false);
