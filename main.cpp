@@ -19,7 +19,11 @@
 #undef GLFW_DLL
 #include <GL/glfw3.h>
 
+#include "ButterDish.h"
+
 using namespace std;
+
+ButterDish one;
 
 void init_model();
 void win_refresh(GLFWwindow*);
@@ -31,7 +35,6 @@ glm::mat4 camera_cf; // {glm::translate(glm::mat4(1.0f), glm::vec3{0,0,-5})};
 void err_function (int what, const char *msg) {
     cerr << what << " " << msg << endl;
 }
-
 
 void win_resize (GLFWwindow * win, int width, int height)
 {
@@ -52,7 +55,11 @@ void win_resize (GLFWwindow * win, int width, int height)
 
     /* near-plane(1) & far-plane(10) are always POSITIVE and they measure
      * the distances along the Z-axis in front of the camera */
-    gluPerspective(60.0, static_cast<float> (width)/ static_cast<float> (height), 1, 10);
+    gluPerspective(60.0, static_cast<float> (width)/ static_cast<float> (height), 1, 20);
+}
+
+void make_model(){
+    one.build(nullptr);
 }
 
 void win_refresh (GLFWwindow *win) {
@@ -113,10 +120,9 @@ void win_refresh (GLFWwindow *win) {
     glPopMatrix();
 
     glPushMatrix();
-    glTranslatef(-S, S, S);
-    glRotatef(30, 0, 1, 0);
-
+    one.render(false);
     glPopMatrix();
+
 
     /* must swap buffer at the end of render function */
     glfwSwapBuffers(win);
@@ -213,7 +219,7 @@ void init_gl() {
     glLineWidth(3.0);
 
     /* place the camera at Z=+5 (notice that the sign is OPPOSITE!) */
-    camera_cf *= glm::translate(glm::vec3{0, 0, -5});
+    camera_cf *= glm::translate(glm::vec3{0, 0, -7});
 }
 
 
@@ -259,6 +265,7 @@ int main() {
     glfwSetWindowSize(win, 450, 300);
     glfwSwapInterval(1);
     init_gl();
+    make_model();
 
     int ev_num = 0;
     win_refresh(win);
