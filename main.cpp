@@ -20,10 +20,13 @@
 #include <GL/glfw3.h>
 
 #include "ButterDish.h"
+#include "Bread.h"
 
 using namespace std;
 
-ButterDish one;
+ButterDish butter;
+Bread bread1;
+bool wireframe;
 
 void init_model();
 void win_refresh(GLFWwindow*);
@@ -59,7 +62,8 @@ void win_resize (GLFWwindow * win, int width, int height)
 }
 
 void make_model(){
-    one.build(nullptr);
+    butter.build(nullptr);
+    bread1.build(nullptr);
 }
 
 void win_refresh (GLFWwindow *win) {
@@ -89,7 +93,11 @@ void win_refresh (GLFWwindow *win) {
 
 
     glPushMatrix();
-    one.render(false);
+    glTranslatef(-8,0,0);
+    butter.render(wireframe);
+    glPopMatrix();
+    glPushMatrix();
+    bread1.render(wireframe);
     glPopMatrix();
 
 
@@ -111,7 +119,7 @@ void key_handler (GLFWwindow *win, int key, int scan_code, int action, int mods)
                 glfwSetWindowShouldClose(win, true);
                 break;
             case GLFW_KEY_W:
-
+                wireframe = !wireframe;
                 break;
             case GLFW_KEY_0:
             case GLFW_KEY_1:
@@ -197,6 +205,7 @@ void init_gl() {
 
 
 int main() {
+    wireframe = false;
     cout << "Hello" << endl;
 
     if(!glfwInit()) {

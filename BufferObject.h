@@ -16,6 +16,8 @@
 #include <glm/glm.hpp>
 using namespace std;
 
+#ifndef BufferObject_H
+#define BufferObject_H
 class BufferObject {
 protected:
     GLuint vertex_buffer, color_buffer, index_buffer;
@@ -48,3 +50,4 @@ public:
 
     virtual void render(bool draw_outline) const = 0;
 };
+#endif
