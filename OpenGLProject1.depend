@@ -15,7 +15,7 @@
 	<GL/glfw3.h>
 	"ButterDish.h"
 
-1422912214 c:\users\ryan\dropbox\gvsu\5th year\winter 2015\cis 367\projects\openglproject1\butterdish.h
+1422925505 c:\users\ryan\dropbox\gvsu\5th year\winter 2015\cis 367\projects\openglproject1\butterdish.h
 	"BufferObject.h"
 
 1422913263 c:\users\ryan\dropbox\gvsu\5th year\winter 2015\cis 367\projects\openglproject1\bufferobject.h
@@ -30,6 +30,6 @@
 	<stdexcept>
 	<glm/glm.hpp>
 
-1422919461 source:c:\users\ryan\dropbox\gvsu\5th year\winter 2015\cis 367\projects\openglproject1\butterdish.cpp
+1422925842 source:c:\users\ryan\dropbox\gvsu\5th year\winter 2015\cis 367\projects\openglproject1\butterdish.cpp
 	"ButterDish.h"
 
