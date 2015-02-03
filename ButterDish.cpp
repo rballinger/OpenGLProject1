@@ -194,9 +194,9 @@ void ButterDish::render(bool outline) const{
     // set mode
     auto mode = GL_QUAD_STRIP;
     if(outline){
-        mode = GL_LINE_LOOP;
+        glPolygonMode(GL_FRONT, GL_LINE);
     }else{
-        mode = GL_QUAD_STRIP;
+        glPolygonMode(GL_FRONT, GL_FILL);
     }
 
     /* bind vertex buffer */
@@ -210,108 +210,86 @@ void ButterDish::render(bool outline) const{
     /* render the polygon */
 
     // top ridge
-    glPolygonMode(GL_FRONT, GL_FILL);
     glFrontFace(GL_CCW);
     glColor3ub (210, 210, 210);
-    glDrawRangeElements(mode, 0, 0, top_ridge_count, GL_UNSIGNED_SHORT, 0);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, top_ridge_count, GL_UNSIGNED_SHORT, 0);
 
     // bottom of top ridge
-    glPolygonMode(GL_FRONT, GL_FILL);
     glFrontFace(GL_CW);
     glColor3ub (60, 60, 60);
-    glDrawRangeElements(mode, 0, 0, top_ridge_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (top_ridge_count)));
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, top_ridge_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (top_ridge_count)));
 
     // top ridge outer walls
-    glPolygonMode(GL_FRONT, GL_FILL);
     glFrontFace(GL_CCW);
     glColor3ub (180, 180, 180);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (2 * top_ridge_count)));
-    glPolygonMode(GL_FRONT, GL_FILL);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (2 * top_ridge_count)));
     glFrontFace(GL_CCW);
     glColor3ub (150, 150, 150);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (2 * top_ridge_count + 2)));
-    glPolygonMode(GL_FRONT, GL_FILL);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (2 * top_ridge_count + 2)));
     glFrontFace(GL_CCW);
     glColor3ub (120, 120, 120);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (2 * top_ridge_count + 4)));
-    glPolygonMode(GL_FRONT, GL_FILL);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (2 * top_ridge_count + 4)));
     glFrontFace(GL_CCW);
     glColor3ub (90, 90, 90);
     glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (2 * top_ridge_count + 6)));
 
     // bottom
-    glPolygonMode(GL_FRONT, GL_FILL);
     glFrontFace(GL_CW);
     glColor3ub (90, 90, 90);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_bottom_count));
-    glPolygonMode(GL_FRONT, GL_FILL);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_bottom_count));
     glFrontFace(GL_CCW);
     glColor3ub (90, 90, 90);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_bottom_count + 4)));
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_bottom_count + 4)));
 
     // butter bottom
-    glPolygonMode(GL_FRONT, GL_FILL);
     glFrontFace(GL_CW);
     glColor3ub (253, 243, 174);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_butter_count));
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_butter_count));
     // butter top
-    glPolygonMode(GL_FRONT, GL_FILL);
     glFrontFace(GL_CCW);
     glColor3ub (253, 243, 174);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_butter_count + 4)));
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_butter_count + 4)));
     // butter sides
-    glPolygonMode(GL_FRONT, GL_FILL);
     glFrontFace(GL_CCW);
     glColor3ub (252, 235, 118);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_butter_sides_count));
-    glPolygonMode(GL_FRONT, GL_FILL);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_butter_sides_count));
     glFrontFace(GL_CCW);
     glColor3ub (251, 231, 87);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_butter_sides_count + 2)));
-    glPolygonMode(GL_FRONT, GL_FILL);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_butter_sides_count + 2)));
     glFrontFace(GL_CCW);
     glColor3ub (250, 223, 35);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_butter_sides_count + 4)));
-    glPolygonMode(GL_FRONT, GL_FILL);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_butter_sides_count + 4)));
     glFrontFace(GL_CCW);
     glColor3ub (211, 186, 5);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_butter_sides_count + 6)));
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_butter_sides_count + 6)));
 
     // outer sides of bottom
-    glPolygonMode(GL_FRONT, GL_FILL);
     glFrontFace(GL_CCW);
     glColor3ub (110, 110, 110);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_outer_bottom_count));
-    glPolygonMode(GL_FRONT, GL_FILL);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_outer_bottom_count));
     glFrontFace(GL_CCW);
     glColor3ub (140, 140, 140);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_outer_bottom_count + 2)));
-    glPolygonMode(GL_FRONT, GL_FILL);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_outer_bottom_count + 2)));
     glFrontFace(GL_CCW);
     glColor3ub (170, 170, 170);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_outer_bottom_count + 4)));
-    glPolygonMode(GL_FRONT, GL_FILL);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_outer_bottom_count + 4)));
     glFrontFace(GL_CCW);
     glColor3ub (200, 200, 200);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_outer_bottom_count + 6)));
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_outer_bottom_count + 6)));
 
     // inner sides of bottom
-    glPolygonMode(GL_FRONT, GL_FILL);
     glFrontFace(GL_CW);
     glColor3ub (110, 110, 110);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_inner_bottom_count));
-    glPolygonMode(GL_FRONT, GL_FILL);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_inner_bottom_count));
     glFrontFace(GL_CW);
     glColor3ub (140, 140, 140);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_inner_bottom_count + 2)));
-    glPolygonMode(GL_FRONT, GL_FILL);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_inner_bottom_count + 2)));
     glFrontFace(GL_CW);
     glColor3ub (170, 170, 170);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_inner_bottom_count + 4)));
-    glPolygonMode(GL_FRONT, GL_FILL);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_inner_bottom_count + 4)));
     glFrontFace(GL_CW);
     glColor3ub (200, 200, 200);
-    glDrawRangeElements(mode, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_inner_bottom_count + 6)));
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_inner_bottom_count + 6)));
 
     /* unbind the buffers */
     glBindBuffer(GL_ARRAY_BUFFER, 0);

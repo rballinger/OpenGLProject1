@@ -1,4 +1,6 @@
+#include <cmath>
 #include "Bread.h"
+#define M_PI           3.14159265358979323846
 
 using glm::vec3;
 
@@ -17,28 +19,93 @@ void Bread::build(void* data){
     all_index.push_back(all_points.size());
     all_points.push_back(c1);
     all_index.push_back(all_points.size());
-    all_points.push_back(c2);
+    all_points.push_back(c3);
 
-//    for(int i = 1; i < SUBDIV; i++){
-//        float t = (float) i / SUBDIV;
-//        v1 = {t * c3 + (1 - t) * c4};
-//        v2 = {t * c1 + (1 - t) * c2};
-//        all_index.push_back(all_points.size());
-//        all_points.push_back(v1);
-//        all_index.push_back(all_points.size());
-//        all_points.push_back(v2);
-//    }
+    for(int i = 1; i < SUBDIV; i++){
+        float t = (float) i / SUBDIV;
+        v1 = {t * c2 + (1 - t) * c1};
+        v2 = {t * c4 + (1 - t) * c3};
+        all_index.push_back(all_points.size());
+        all_points.push_back(v1);
+        all_index.push_back(all_points.size());
+        all_points.push_back(v2);
+    }
 
     all_index.push_back(all_points.size());
-    all_points.push_back(c3);
+    all_points.push_back(c2);
     all_index.push_back(all_points.size());
     all_points.push_back(c4);
 
-    bottom_square_count = all_index.size();
+    square_count = all_index.size();
+    square_points = all_points.size();
+
+    // bread round edges
+    // left round edge
+    c1.y -= SMALL_RAD;
+    all_index.push_back(all_points.size());
+    all_points.push_back(c1);
+    v1 = {c1.x, c1.y - SMALL_RAD, c1.z};
+    for(int i = 0; i < SUBDIV; i++){
+        v1 = {c1.x - (SMALL_RAD * sin(i * M_PI / 6)), c1.y + (SMALL_RAD * cos(i * M_PI / 6)), c1.z};
+        all_index.push_back(all_points.size());
+        all_points.push_back(v1);
+    }
+    c1.y -= SMALL_RAD;
+    all_index.push_back(all_points.size());
+    all_points.push_back(c1);
+
+    before_right_round_count = all_index.size();
+    round_count = all_index.size() - square_count;
+    // right round edge
+    c2.y -= SMALL_RAD;
+    all_index.push_back(all_points.size());
+    all_points.push_back(c2);
+    v1 = {c2.x, c2.y - SMALL_RAD, c2.z};
+    for(int i = 0; i < SUBDIV; i++){
+        v1 = {c2.x + (SMALL_RAD * sin(i * M_PI / 6)), c2.y + (SMALL_RAD * cos(i * M_PI / 6)), c2.z};
+        all_index.push_back(all_points.size());
+        all_points.push_back(v1);
+    }
+    c2.y -= SMALL_RAD;
+    all_index.push_back(all_points.size());
+    all_points.push_back(c2);
+
+    before_top_count = all_index.size();
+    side_points = all_points.size();
+    // bread top
+    for(auto v : all_points){
+        v.z += BREAD_THICKNESS;
+        all_index.push_back(all_points.size());
+        all_points.push_back(v);
+    }
+
+    before_crust_count = all_index.size();
+    // crust
+    // top side
+    for(int i = 0; i < square_points; i++){
+        all_index.push_back(i);
+        all_index.push_back(i + side_points);
+        i++;
+    }
+    // right round side
+    for(int i = 24; i < 30; i++){
+        all_index.push_back(i);
+        all_index.push_back(i + side_points);
+    }
+    // bottom side
+    for(int i = square_points - 1; i > 0; i--){
+        all_index.push_back(i);
+        all_index.push_back(i + side_points);
+        i--;
+    }
+    // left round side
+    for(int i = 21; i > 14; i--){
+        all_index.push_back(i);
+        all_index.push_back(i + side_points);
+    }
 
     total_count = all_index.size();
-
-
+    crust_count = total_count - before_crust_count;
 
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER, all_points.size() * sizeof(float) * 3, NULL, GL_DYNAMIC_DRAW);
@@ -71,13 +138,45 @@ void Bread::render(bool outline) const{
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
     /* render the polygon */
-
+    if(outline){
+        glPolygonMode(GL_FRONT, GL_LINE);
+    }else{
+        glPolygonMode(GL_FRONT, GL_FILL);
+    }
     // bread bottom square
-    glPolygonMode(GL_FRONT, GL_FILL);
-    glFrontFace(GL_CCW);
-    glColor3ub (200, 200, 200);
-    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, bottom_square_count, GL_UNSIGNED_SHORT, 0);
+    glFrontFace(GL_CW);
+    glColor3ub (255, 255, 255);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, square_count, GL_UNSIGNED_SHORT, 0);
 
+    // bread left round edge
+    glFrontFace(GL_CW);
+    glColor3ub (255, 255, 255);
+    glDrawRangeElements(GL_TRIANGLE_FAN, 0, 0, round_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * square_count));
+
+    // bread right round edge
+    glFrontFace(GL_CCW);
+    glColor3ub (255, 255, 255);
+    glDrawRangeElements(GL_TRIANGLE_FAN, 0, 0, round_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_right_round_count));
+
+    // bread top square
+    glFrontFace(GL_CCW);
+    glColor3ub (255, 255, 255);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, square_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_top_count));
+
+    // bread left round edge
+    glFrontFace(GL_CCW);
+    glColor3ub (255, 255, 255);
+    glDrawRangeElements(GL_TRIANGLE_FAN, 0, 0, round_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_top_count + square_count)));
+
+    // bread right round edge
+    glFrontFace(GL_CW);
+    glColor3ub (255, 255, 255);
+    glDrawRangeElements(GL_TRIANGLE_FAN, 0, 0, round_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_top_count + square_count + round_count)));
+
+    // crust
+    glFrontFace(GL_CCW);
+    glColor3ub (134, 61, 18);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, crust_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_crust_count));
 
     /* unbind the buffers */
     glBindBuffer(GL_ARRAY_BUFFER, 0);
