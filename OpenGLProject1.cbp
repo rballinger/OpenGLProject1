@@ -20,6 +20,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="Bread.cpp" />
+		<Unit filename="Bread.h" />
 		<Unit filename="BufferObject.h" />
 		<Unit filename="ButterDish.cpp" />
 		<Unit filename="ButterDish.h" />

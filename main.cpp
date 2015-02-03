@@ -103,11 +103,15 @@ void key_handler (GLFWwindow *win, int key, int scan_code, int action, int mods)
     cout << __FUNCTION__ << endl;
     if (action != GLFW_PRESS) return;
     if (mods == GLFW_MOD_SHIFT) {
+
     }
     else {
         switch (key) {
             case GLFW_KEY_ESCAPE:
                 glfwSetWindowShouldClose(win, true);
+                break;
+            case GLFW_KEY_W:
+
                 break;
             case GLFW_KEY_0:
             case GLFW_KEY_1:
@@ -236,7 +240,6 @@ int main() {
     init_gl();
     make_model();
 
-    int ev_num = 0;
     win_refresh(win);
     while (!glfwWindowShouldClose(win)) {
         glfwWaitEvents();
