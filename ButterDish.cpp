@@ -191,14 +191,6 @@ void ButterDish::build(void* data){
 }
 
 void ButterDish::render(bool outline) const{
-    // set mode
-    auto mode = GL_QUAD_STRIP;
-    if(outline){
-        glPolygonMode(GL_FRONT, GL_LINE);
-    }else{
-        glPolygonMode(GL_FRONT, GL_FILL);
-    }
-
     /* bind vertex buffer */
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glVertexPointer(3, GL_FLOAT, 0, 0);
@@ -208,6 +200,12 @@ void ButterDish::render(bool outline) const{
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
     /* render the polygon */
+    // set mode
+    if(outline){
+        glPolygonMode(GL_FRONT, GL_LINE);
+    }else{
+        glPolygonMode(GL_FRONT, GL_FILL);
+    }
 
     // top ridge
     glFrontFace(GL_CCW);

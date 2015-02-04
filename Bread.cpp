@@ -138,6 +138,7 @@ void Bread::render(bool outline) const{
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
     /* render the polygon */
+    // set mode
     if(outline){
         glPolygonMode(GL_FRONT, GL_LINE);
     }else{
@@ -145,32 +146,32 @@ void Bread::render(bool outline) const{
     }
     // bread bottom square
     glFrontFace(GL_CW);
-    glColor3ub (255, 255, 255);
+    glColor3ub (196, 140, 89);
     glDrawRangeElements(GL_QUAD_STRIP, 0, 0, square_count, GL_UNSIGNED_SHORT, 0);
 
     // bread left round edge
     glFrontFace(GL_CW);
-    glColor3ub (255, 255, 255);
+    glColor3ub (196, 140, 89);
     glDrawRangeElements(GL_TRIANGLE_FAN, 0, 0, round_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * square_count));
 
     // bread right round edge
     glFrontFace(GL_CCW);
-    glColor3ub (255, 255, 255);
+    glColor3ub (196, 140, 89);
     glDrawRangeElements(GL_TRIANGLE_FAN, 0, 0, round_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_right_round_count));
 
     // bread top square
     glFrontFace(GL_CCW);
-    glColor3ub (255, 255, 255);
+    glColor3ub (196, 140, 89);
     glDrawRangeElements(GL_QUAD_STRIP, 0, 0, square_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_top_count));
 
     // bread left round edge
     glFrontFace(GL_CCW);
-    glColor3ub (255, 255, 255);
+    glColor3ub (196, 140, 89);
     glDrawRangeElements(GL_TRIANGLE_FAN, 0, 0, round_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_top_count + square_count)));
 
     // bread right round edge
     glFrontFace(GL_CW);
-    glColor3ub (255, 255, 255);
+    glColor3ub (196, 140, 89);
     glDrawRangeElements(GL_TRIANGLE_FAN, 0, 0, round_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_top_count + square_count + round_count)));
 
     // crust
