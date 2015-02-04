@@ -25,6 +25,8 @@
 		<Unit filename="BufferObject.h" />
 		<Unit filename="ButterDish.cpp" />
 		<Unit filename="ButterDish.h" />
+		<Unit filename="Toaster.cpp" />
+		<Unit filename="Toaster.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

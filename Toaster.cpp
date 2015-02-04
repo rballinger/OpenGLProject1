@@ -1,10 +1,10 @@
 #include <cmath>
-#include "Bread.h"
+#include "Toaster.h"
 #define M_PI           3.14159265358979323846
 
 using glm::vec3;
 
-void Bread::build(void* data){
+void Toaster::build(void* data){
     glGenBuffers(1, &vertex_buffer);
     glGenBuffers(1, &index_buffer);
     vec3 v1, v2, c1, c2, c3, c4;
@@ -21,17 +21,31 @@ void Bread::build(void* data){
     all_index.push_back(all_points.size());
     all_points.push_back(c3);
 
-    for(int i = 1; i < SUBDIV; i++){
-        float t = (float) i / SUBDIV;
+    for(int i = 1; i < SUBDIV_TLENGTH; i++){
+        float t = (float) i / SUBDIV_TLENGTH;
         v1 = {t * c2 + (1 - t) * c1};
         v2 = {t * c4 + (1 - t) * c3};
+        if(i != 1 && i != (SUBDIV_TLENGTH - 1)){
+            v2.z += LEG_HEIGHT;
+        }
         all_index.push_back(all_points.size());
         all_points.push_back(v1);
         all_index.push_back(all_points.size());
         all_points.push_back(v2);
     }
 
+    all_index.push_back(all_points.size());
+    all_points.push_back(c2);
+    all_index.push_back(all_points.size());
+    all_points.push_back(c4);
+
     side_count = all_index.size();
+
+    for(auto v : all_points){
+        v.y += TOASTER_WIDTH;
+        all_index.push_back(all_points.size());
+        all_points.push_back(v);
+    }
 
     total_count = all_index.size();
 
@@ -56,7 +70,7 @@ void Bread::build(void* data){
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Bread::render(bool outline) const{
+void Toaster::render(bool outline) const{
     /* bind vertex buffer */
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glVertexPointer(3, GL_FLOAT, 0, 0);
@@ -73,10 +87,15 @@ void Bread::render(bool outline) const{
         glPolygonMode(GL_FRONT, GL_FILL);
     }
 
-    // front side square
+    // front side
     glFrontFace(GL_CCW);
-    glColor3ub (172, 130, 92);
-    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, side_count, GL_UNSIGNED_SHORT, 0));
+    glColor3ub (255, 255, 255);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, side_count, GL_UNSIGNED_SHORT, 0);
+
+    // back side
+    glFrontFace(GL_CW);
+    glColor3ub (255, 255, 255);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, side_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * side_count));
 
     /* unbind the buffers */
     glBindBuffer(GL_ARRAY_BUFFER, 0);
