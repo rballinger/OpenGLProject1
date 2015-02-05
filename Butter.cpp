@@ -5,10 +5,33 @@ using glm::vec3;
 void Butter::build(){
     glGenBuffers(1, &vertex_buffer);
     glGenBuffers(1, &index_buffer);
-    vec3 v1, v2, c1, c2, c3, c4;
+    vec3 v1, v2;
 
     // build butter
+    // top side
+    v1 = {BUTTER_SIDE_LEN / 2, -BUTTER_SIDE_LEN / 2, BUTTER_SIDE_LEN / 2};
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
+    v1.y += BUTTER_SIDE_LEN;
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
+    v1.x -= BUTTER_SIDE_LEN;
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
+    v1.y -= BUTTER_SIDE_LEN;
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
 
+    top_count = all_index.size();
+
+    // bottom side
+    for(auto v : all_points){
+        v.z -= BUTTER_SIDE_LEN;
+        all_index.push_back(all_points.size());
+        all_points.push_back(v);
+    }
+
+    before_sides_count = all_index.size();
     total_count = all_index.size();
 
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
@@ -48,6 +71,15 @@ void Butter::render(bool outline) const{
     }else{
         glPolygonMode(GL_FRONT, GL_FILL);
     }
+
+    // top side
+    glFrontFace(GL_CCW);
+    glColor3ub (253, 243, 174);
+    glDrawRangeElements(GL_QUADS, 0, 0, top_count, GL_UNSIGNED_SHORT, 0);
+    // bottom side
+    glFrontFace(GL_CW);
+    glColor3ub (253, 243, 174);
+    glDrawRangeElements(GL_QUADS, 0, 0, top_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * top_count));
 
     /* unbind the buffers */
     glBindBuffer(GL_ARRAY_BUFFER, 0);

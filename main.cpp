@@ -104,11 +104,16 @@ void win_refresh (GLFWwindow *win) {
     glPopMatrix();
 
     glPushMatrix();
+    glTranslatef(8,0,0);
     bread1.render(wireframe);
     glPopMatrix();
 
     glPushMatrix();
     toaster.render(wireframe);
+    glPopMatrix();
+
+    glPushMatrix();
+    big_butter.render(wireframe);
     glPopMatrix();
 
 
