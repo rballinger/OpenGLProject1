@@ -4,14 +4,14 @@
 
 using glm::vec3;
 
-void Toaster::build(void* data){
+void Toaster::build(){
     glGenBuffers(1, &vertex_buffer);
     glGenBuffers(1, &index_buffer);
     vec3 v1, v2, c1, c2, c3, c4;
 
-    // build bread
+    // build toaster
 
-    // bread bottom square
+    // toaster front side
     c1 = {-TOASTER_LENGTH / 2, 0, TOASTER_HEIGHT};
     c2 = {TOASTER_LENGTH / 2, 0, TOASTER_HEIGHT};
     c3 = {-TOASTER_LENGTH / 2, 0, 0};
@@ -41,6 +41,7 @@ void Toaster::build(void* data){
 
     side_count = all_index.size();
 
+    // toaster back side
     for(auto v : all_points){
         v.y += TOASTER_WIDTH;
         all_index.push_back(all_points.size());

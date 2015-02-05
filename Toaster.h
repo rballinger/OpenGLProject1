@@ -13,6 +13,6 @@ private:
 
 protected:
 public:
-    void build (void*);
+    void build ();
     void render(bool) const;
 };

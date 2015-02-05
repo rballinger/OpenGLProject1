@@ -2,7 +2,7 @@
 
 using glm::vec3;
 
-void ButterDish::build(void* data){
+void ButterDish::build(){
     glGenBuffers(1, &vertex_buffer);
     glGenBuffers(1, &index_buffer);
     vec3 v1, v2, v3, v4;

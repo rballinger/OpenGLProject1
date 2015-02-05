@@ -23,31 +23,22 @@ protected:
     GLuint vertex_buffer, color_buffer, index_buffer;
     std::vector <glm::vec3> all_points, all_colors;
     vector<GLushort> all_index;
-private:
-    bool build_complete;
 public:
     BufferObject() {
         vertex_buffer = color_buffer = index_buffer = 0;
-        build_complete = false;
     }
 
     ~BufferObject() {
-#if 0
         if (glIsBuffer(vertex_buffer))
             glDeleteBuffers(1, &vertex_buffer);
         if (glIsBuffer(color_buffer))
             glDeleteBuffers(1, &color_buffer);
         if (glIsBuffer(index_buffer))
             glDeleteBuffers(1, &index_buffer);
-#endif
     }
 
-    void post_build() {
-        build_complete = true;
-    }
+    virtual void build() = 0;
 
-    virtual void build(void *data) = 0;
-
-    virtual void render(bool draw_outline) const = 0;
+    virtual void render(bool outline) const = 0;
 };
 #endif

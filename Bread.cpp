@@ -4,7 +4,7 @@
 
 using glm::vec3;
 
-void Bread::build(void* data){
+void Bread::build(){
     glGenBuffers(1, &vertex_buffer);
     glGenBuffers(1, &index_buffer);
     vec3 v1, v2, c1, c2, c3, c4;

@@ -22,12 +22,14 @@
 #include "ButterDish.h"
 #include "Bread.h"
 #include "Toaster.h"
+#include "Butter.h"
 
 using namespace std;
 
-ButterDish butter;
+ButterDish butterdish;
 Bread bread1;
 Toaster toaster;
+Butter big_butter;
 bool wireframe;
 
 void init_model();
@@ -64,9 +66,10 @@ void win_resize (GLFWwindow * win, int width, int height)
 }
 
 void make_model(){
-    butter.build(nullptr);
-    bread1.build(nullptr);
-    toaster.build(nullptr);
+    butterdish.build();
+    bread1.build();
+    toaster.build();
+    big_butter.build();
 }
 
 void win_refresh (GLFWwindow *win) {
@@ -97,7 +100,7 @@ void win_refresh (GLFWwindow *win) {
 
     glPushMatrix();
     glTranslatef(-8,0,0);
-    butter.render(wireframe);
+    butterdish.render(wireframe);
     glPopMatrix();
 
     glPushMatrix();
