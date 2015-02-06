@@ -93,52 +93,6 @@ void ButterDish::build(){
     all_index.push_back(all_points.size());
     all_points.push_back(v3);
 
-    before_butter_count = all_index.size();
-    before_butter_points = all_points.size();
-
-    // butter
-    v1.x = BUTTER_WIDTH / 2;
-    v1.y = -1.5;
-    all_index.push_back(all_points.size());
-    all_points.push_back(v1);
-    v2.x = BUTTER_WIDTH / 2;
-    v2.y = 2.5;
-    all_index.push_back(all_points.size());
-    all_points.push_back(v2);
-    v3.x = -BUTTER_WIDTH / 2;
-    v3.y = -1.5;
-    all_index.push_back(all_points.size());
-    all_points.push_back(v3);
-    v4.x = -BUTTER_WIDTH / 2;
-    v4.y = 2.5;
-    all_index.push_back(all_points.size());
-    all_points.push_back(v4);
-    v1.z += BUTTER_HEIGHT;
-    all_index.push_back(all_points.size());
-    all_points.push_back(v1);
-    v2.z += BUTTER_HEIGHT;
-    all_index.push_back(all_points.size());
-    all_points.push_back(v2);
-    v3.z += BUTTER_HEIGHT;
-    all_index.push_back(all_points.size());
-    all_points.push_back(v3);
-    v4.z += BUTTER_HEIGHT;
-    all_index.push_back(all_points.size());
-    all_points.push_back(v4);
-
-    before_butter_sides_count = all_index.size();
-    // butter sides
-    all_index.push_back(before_butter_points + 4);
-    all_index.push_back(before_butter_points);
-    all_index.push_back(before_butter_points + 5);
-    all_index.push_back(before_butter_points + 1);
-    all_index.push_back(before_butter_points + 7);
-    all_index.push_back(before_butter_points + 3);
-    all_index.push_back(before_butter_points + 6);
-    all_index.push_back(before_butter_points + 2);
-    all_index.push_back(before_butter_points + 4);
-    all_index.push_back(before_butter_points);
-
     before_outer_bottom_count = all_index.size();
 
     // outer sides of bottom
@@ -238,28 +192,6 @@ void ButterDish::render(bool outline) const{
     glFrontFace(GL_CCW);
     glColor3ub (90, 90, 90);
     glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_bottom_count + 4)));
-
-    // butter bottom
-    glFrontFace(GL_CW);
-    glColor3ub (253, 243, 174);
-    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_butter_count));
-    // butter top
-    glFrontFace(GL_CCW);
-    glColor3ub (253, 243, 174);
-    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_butter_count + 4)));
-    // butter sides
-    glFrontFace(GL_CCW);
-    glColor3ub (252, 235, 118);
-    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_butter_sides_count));
-    glFrontFace(GL_CCW);
-    glColor3ub (251, 231, 87);
-    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_butter_sides_count + 2)));
-    glFrontFace(GL_CCW);
-    glColor3ub (250, 223, 35);
-    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_butter_sides_count + 4)));
-    glFrontFace(GL_CCW);
-    glColor3ub (211, 186, 5);
-    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_butter_sides_count + 6)));
 
     // outer sides of bottom
     glFrontFace(GL_CCW);

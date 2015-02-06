@@ -48,6 +48,54 @@ void Toaster::build(){
         all_points.push_back(v);
     }
 
+    before_bottom_count = all_index.size();
+    // toaster bottom
+    int odd;
+    for(int i = 0; i < side_count; i++){
+        odd = 2 * i + 1;
+        all_index.push_back(odd);
+        all_index.push_back(odd + side_count);
+    }
+
+
+
+    before_left_round_count = all_index.size();
+    // left round
+    // left round top
+    c1.y += TOASTER_WIDTH / 2;  // center of triangle fan
+    all_index.push_back(all_points.size());
+    all_points.push_back(c1);
+    all_index.push_back(side_count);
+    cout << "(" << c1.x << "," << c1.y << "," << c1.z << ")" << endl;
+    float newX, newY;
+    for(int i = SUBDIV_MAJ_RAD - 1; i > 0; i--){
+        newY = c1.y + SUBDIV_MAJ_RAD_AMT * i;
+        newX = c1.x - sqrt((1 - (pow(SUBDIV_MAJ_RAD_AMT * i, 2) / pow(TOASTER_MAJ_RAD, 2))) * pow(TOASTER_MIN_RAD, 2));
+        cout << newX<< endl;
+        v1 = {newX, newY, c1.z};
+        cout << "(" << v1.x << "," << v1.y << "," << v1.z << ")" << endl;
+        all_index.push_back(all_points.size());
+        all_points.push_back(v1);
+    }
+    for(int i = 0; i < SUBDIV_MAJ_RAD; i++){
+        newY = c1.y - SUBDIV_MAJ_RAD_AMT * i;
+        newX = c1.x - sqrt((1 - (pow(SUBDIV_MAJ_RAD_AMT * i, 2) / pow(TOASTER_MAJ_RAD, 2))) * pow(TOASTER_MIN_RAD, 2));
+        v1 = {newX, newY, c1.z};
+        cout << "(" << v1.x << "," << v1.y << "," << v1.z << ")" << endl;
+        all_index.push_back(all_points.size());
+        all_points.push_back(v1);
+    }
+    all_index.push_back(0);
+
+    round_points = all_index.size() - before_bottom_count;
+
+
+
+
+
+    before_right_round_count = all_index.size();
+    // right round side
+
     total_count = all_index.size();
 
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
@@ -97,6 +145,24 @@ void Toaster::render(bool outline) const{
     glFrontFace(GL_CW);
     glColor3ub (255, 255, 255);
     glDrawRangeElements(GL_QUAD_STRIP, 0, 0, side_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * side_count));
+
+    // bottom side
+    glFrontFace(GL_CCW);
+    glColor3ub (200, 200, 200);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_bottom_count));
+    glColor3ub (175, 175, 175);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_bottom_count + 2)));
+    glColor3ub (150, 150, 150);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, side_count - 8, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_bottom_count + 4)));
+    glColor3ub (175, 175, 175);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_bottom_count + side_count - 6)));
+    glColor3ub (200, 200, 200);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_bottom_count + side_count - 4)));
+
+    // left round top
+    glFrontFace(GL_CCW);
+    glColor3ub (180, 180, 180);
+    glDrawRangeElements(GL_TRIANGLE_FAN, 0, 0, round_points, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_left_round_count));
 
     /* unbind the buffers */
     glBindBuffer(GL_ARRAY_BUFFER, 0);

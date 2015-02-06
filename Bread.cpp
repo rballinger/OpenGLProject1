@@ -46,7 +46,7 @@ void Bread::build(){
     all_points.push_back(c1);
     v1 = {c1.x, c1.y - SMALL_RAD, c1.z};
     for(int i = 0; i < SUBDIV; i++){
-        v1 = {c1.x - (SMALL_RAD * sin(i * M_PI / 6)), c1.y + (SMALL_RAD * cos(i * M_PI / 6)), c1.z};
+        v1 = {c1.x - (SMALL_RAD * sin(i * M_PI / SUBDIV)), c1.y + (SMALL_RAD * cos(i * M_PI / SUBDIV)), c1.z};
         all_index.push_back(all_points.size());
         all_points.push_back(v1);
     }

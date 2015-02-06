@@ -32,6 +32,14 @@ void Butter::build(){
     }
 
     before_sides_count = all_index.size();
+    // sides
+    for(int i = 0; i < top_count; i++){
+        all_index.push_back(i);
+        all_index.push_back(i + top_count);
+    }
+    all_index.push_back(0);
+    all_index.push_back(top_count);
+
     total_count = all_index.size();
 
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
@@ -80,6 +88,19 @@ void Butter::render(bool outline) const{
     glFrontFace(GL_CW);
     glColor3ub (253, 243, 174);
     glDrawRangeElements(GL_QUADS, 0, 0, top_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * top_count));
+    // sides
+    glFrontFace(GL_CCW);
+    glColor3ub (252, 235, 118);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_sides_count));
+    glFrontFace(GL_CCW);
+    glColor3ub (251, 231, 87);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_sides_count + 2)));
+    glFrontFace(GL_CCW);
+    glColor3ub (250, 223, 35);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_sides_count + 4)));
+    glFrontFace(GL_CCW);
+    glColor3ub (211, 186, 5);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_sides_count + 6)));
 
     /* unbind the buffers */
     glBindBuffer(GL_ARRAY_BUFFER, 0);

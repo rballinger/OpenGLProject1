@@ -7,8 +7,6 @@ private:
     const float TOP_WIDTH = 3.75;
     const float BOTTOM_WIDTH = 2.5;
     const float HEIGHT = 1.25;
-    const float BUTTER_WIDTH = 1.5;
-    const float BUTTER_HEIGHT = 1.5;
     int total_count,
         top_ridge_count,
         top_ridge_points,

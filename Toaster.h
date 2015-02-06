@@ -1,15 +1,22 @@
 #include "BufferObject.h"
 class Toaster : public BufferObject {
 private:
-    const float TOASTER_WIDTH = 6.0;
-    const float TOASTER_LENGTH = 9.0;
-    const float TOASTER_HEIGHT = 8.5;
-    const float TOASTER_RAD = 1.65;
-    const float SUBDIV_AMT = 0.5;
-    const float LEG_HEIGHT = 1.0;
+    const float TOASTER_WIDTH = 6.0f;
+    const float TOASTER_LENGTH = 9.0f;
+    const float TOASTER_HEIGHT = 8.5f;
+    const float TOASTER_MAJ_RAD = TOASTER_WIDTH / 2;
+    const float TOASTER_MIN_RAD = 1.65f;
+    const float SUBDIV_AMT = 0.5f;
+    const float LEG_HEIGHT = 1.0f;
     const float SUBDIV_TLENGTH = TOASTER_LENGTH / SUBDIV_AMT;
+    const int SUBDIV_MAJ_RAD = 10;
+    const float SUBDIV_MAJ_RAD_AMT = TOASTER_MAJ_RAD / SUBDIV_MAJ_RAD;
     int total_count,
-        side_count;
+        side_count,
+        before_bottom_count,
+        before_left_round_count,
+        before_right_round_count,
+        round_points;
 
 protected:
 public:
