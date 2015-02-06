@@ -14,9 +14,10 @@ private:
     int total_count,
         side_count,
         before_bottom_count,
-        before_left_round_count,
-        before_right_round_count,
-        round_points;
+        before_left_top_count,
+        before_right_top_count,
+        round_points,
+        before_round_bottom_count;
 
 protected:
 public:

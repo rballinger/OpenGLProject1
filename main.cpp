@@ -104,7 +104,7 @@ void win_refresh (GLFWwindow *win) {
     glPopMatrix();
 
     glPushMatrix();
-    glTranslatef(8,0,0);
+    glTranslatef(10,0,0);
     bread1.render(wireframe);
     glPopMatrix();
 

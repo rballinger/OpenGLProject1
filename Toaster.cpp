@@ -57,23 +57,17 @@ void Toaster::build(){
         all_index.push_back(odd + side_count);
     }
 
-
-
-    before_left_round_count = all_index.size();
-    // left round
-    // left round top
+    before_left_top_count = all_index.size();
+    // left round top side
     c1.y += TOASTER_WIDTH / 2;  // center of triangle fan
     all_index.push_back(all_points.size());
     all_points.push_back(c1);
     all_index.push_back(side_count);
-    cout << "(" << c1.x << "," << c1.y << "," << c1.z << ")" << endl;
     float newX, newY;
     for(int i = SUBDIV_MAJ_RAD - 1; i > 0; i--){
         newY = c1.y + SUBDIV_MAJ_RAD_AMT * i;
         newX = c1.x - sqrt((1 - (pow(SUBDIV_MAJ_RAD_AMT * i, 2) / pow(TOASTER_MAJ_RAD, 2))) * pow(TOASTER_MIN_RAD, 2));
-        cout << newX<< endl;
         v1 = {newX, newY, c1.z};
-        cout << "(" << v1.x << "," << v1.y << "," << v1.z << ")" << endl;
         all_index.push_back(all_points.size());
         all_points.push_back(v1);
     }
@@ -81,20 +75,46 @@ void Toaster::build(){
         newY = c1.y - SUBDIV_MAJ_RAD_AMT * i;
         newX = c1.x - sqrt((1 - (pow(SUBDIV_MAJ_RAD_AMT * i, 2) / pow(TOASTER_MAJ_RAD, 2))) * pow(TOASTER_MIN_RAD, 2));
         v1 = {newX, newY, c1.z};
-        cout << "(" << v1.x << "," << v1.y << "," << v1.z << ")" << endl;
         all_index.push_back(all_points.size());
         all_points.push_back(v1);
     }
     all_index.push_back(0);
+    c1.y -= TOASTER_WIDTH / 2;
 
-    round_points = all_index.size() - before_bottom_count;
+    round_points = all_index.size() - before_left_top_count;
 
+    before_right_top_count = all_index.size();
+    // right round top side
+    c2.y += TOASTER_WIDTH / 2;  // center of triangle fan
+    all_index.push_back(all_points.size());
+    all_points.push_back(c2);
+    all_index.push_back(side_count * 2 - 2);
+    for(int i = SUBDIV_MAJ_RAD - 1; i > 0; i--){
+        newY = c2.y + SUBDIV_MAJ_RAD_AMT * i;
+        newX = c2.x + sqrt((1 - (pow(SUBDIV_MAJ_RAD_AMT * i, 2) / pow(TOASTER_MAJ_RAD, 2))) * pow(TOASTER_MIN_RAD, 2));
+        v1 = {newX, newY, c2.z};
+        all_index.push_back(all_points.size());
+        all_points.push_back(v1);
+    }
+    for(int i = 0; i < SUBDIV_MAJ_RAD; i++){
+        newY = c2.y - SUBDIV_MAJ_RAD_AMT * i;
+        newX = c2.x + sqrt((1 - (pow(SUBDIV_MAJ_RAD_AMT * i, 2) / pow(TOASTER_MAJ_RAD, 2))) * pow(TOASTER_MIN_RAD, 2));
+        v1 = {newX, newY, c2.z};
+        all_index.push_back(all_points.size());
+        all_points.push_back(v1);
+    }
+    all_index.push_back(side_count - 2);
+    c2.y -= TOASTER_WIDTH / 2;
 
+    before_round_bottom_count = all_index.size();
+    // bottom of round sides
+    for(int i = before_left_top_count; i < before_round_bottom_count; i++){
+        v1 = all_points[all_index[i]];
+        v1.z -= TOASTER_HEIGHT;
+        all_index.push_back(all_points.size());
+        all_points.push_back(v1);
+    }
 
-
-
-    before_right_round_count = all_index.size();
-    // right round side
 
     total_count = all_index.size();
 
@@ -161,8 +181,21 @@ void Toaster::render(bool outline) const{
 
     // left round top
     glFrontFace(GL_CCW);
-    glColor3ub (180, 180, 180);
-    glDrawRangeElements(GL_TRIANGLE_FAN, 0, 0, round_points, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_left_round_count));
+    glColor3ub (200, 200, 200);
+    glDrawRangeElements(GL_TRIANGLE_FAN, 0, 0, round_points, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_left_top_count));
+    // right round top
+    glFrontFace(GL_CW);
+    glColor3ub (200, 200, 200);
+    glDrawRangeElements(GL_TRIANGLE_FAN, 0, 0, round_points, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_right_top_count));
+
+    // left round bottom
+    glFrontFace(GL_CW);
+    glColor3ub (200, 200, 200);
+    glDrawRangeElements(GL_TRIANGLE_FAN, 0, 0, round_points, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_round_bottom_count));
+    // right round bottom
+    glFrontFace(GL_CCW);
+    glColor3ub (200, 200, 200);
+    glDrawRangeElements(GL_TRIANGLE_FAN, 0, 0, round_points, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_round_bottom_count + round_points)));
 
     /* unbind the buffers */
     glBindBuffer(GL_ARRAY_BUFFER, 0);
