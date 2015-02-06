@@ -41,6 +41,12 @@ void Toaster::build(){
 
     side_count = all_index.size();
 
+    cout << "front side" << endl;
+    for(int i = 0; i < side_count; i++){
+        cout << all_index[i] << ",";
+    }
+    cout << endl;
+
     // toaster back side
     for(auto v : all_points){
         v.y += TOASTER_WIDTH;
@@ -48,14 +54,26 @@ void Toaster::build(){
         all_points.push_back(v);
     }
 
+    cout << "back side" << endl;
+    for(int i = side_count; i < side_count * 2; i++){
+        cout << all_index[i] << ",";
+    }
+    cout << endl;
+
     before_bottom_count = all_index.size();
     // toaster bottom
     int odd;
-    for(int i = 0; i < side_count; i++){
+    for(int i = 0; i < side_count / 2; i++){
         odd = 2 * i + 1;
         all_index.push_back(odd);
         all_index.push_back(odd + side_count);
     }
+
+    cout << "bottom side" << endl;
+    for(int i = before_bottom_count; i < all_index.size(); i++){
+        cout << all_index[i] << ",";
+    }
+    cout << endl;
 
     before_left_top_count = all_index.size();
     // left round top side
@@ -83,6 +101,12 @@ void Toaster::build(){
 
     round_points = all_index.size() - before_left_top_count;
 
+    cout << "left top" << endl;
+    for(int i = before_left_top_count; i < all_index.size(); i++){
+        cout << all_index[i] << ",";
+    }
+    cout << endl;
+
     before_right_top_count = all_index.size();
     // right round top side
     c2.y += TOASTER_WIDTH / 2;  // center of triangle fan
@@ -106,15 +130,56 @@ void Toaster::build(){
     all_index.push_back(side_count - 2);
     c2.y -= TOASTER_WIDTH / 2;
 
+    cout << "right top" << endl;
+    for(int i = before_right_top_count; i < all_index.size(); i++){
+        cout << all_index[i] << ",";
+    }
+    cout << endl;
+
     before_round_bottom_count = all_index.size();
     // bottom of round sides
     for(int i = before_left_top_count; i < before_round_bottom_count; i++){
-        v1 = all_points[all_index[i]];
-        v1.z -= TOASTER_HEIGHT;
-        all_index.push_back(all_points.size());
-        all_points.push_back(v1);
+        if(i == before_left_top_count + 1){
+            all_index.push_back(1 + side_count);
+        }else if(i == before_left_top_count + round_points - 1){
+            all_index.push_back(1);
+        }else if(i == before_right_top_count + 1){
+            all_index.push_back(side_count * 2 - 1);
+        }else if(i == before_right_top_count + round_points - 1){
+            all_index.push_back(side_count - 1);
+        }else{
+            v1 = all_points[all_index[i]];
+            v1.z -= TOASTER_HEIGHT;
+            all_index.push_back(all_points.size());
+            all_points.push_back(v1);
+        }
     }
 
+    cout << "bottom round sides" << endl;
+    for(int i = before_round_bottom_count; i < all_index.size(); i++){
+        cout << all_index[i] << ",";
+    }
+    cout << endl;
+
+    before_left_wall_count = all_index.size();
+//    left wall
+    for(int i = before_left_top_count + 1; i < before_round_bottom_count - round_points; i++){
+        all_index.push_back(all_index[i]);
+        all_index.push_back(all_index[i + round_points * 2]);
+    }
+
+    cout << "left wall" << endl;
+    for(int i = before_left_wall_count; i < all_index.size(); i++){
+        cout << all_index[i] << ",";
+    }
+    cout << endl;
+
+    before_right_wall_count = all_index.size();
+    // right wall
+    for(int i = before_left_top_count + round_points + 1; i < before_round_bottom_count; i++){
+        all_index.push_back(all_index[i]);
+        all_index.push_back(all_index[i + round_points * 2]);
+    }
 
     total_count = all_index.size();
 
@@ -196,6 +261,15 @@ void Toaster::render(bool outline) const{
     glFrontFace(GL_CCW);
     glColor3ub (200, 200, 200);
     glDrawRangeElements(GL_TRIANGLE_FAN, 0, 0, round_points, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_round_bottom_count + round_points)));
+
+    // left round wall
+    glFrontFace(GL_CCW);
+    glColor3ub (225, 225, 225);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, round_points * 2 - 2, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_left_wall_count));
+    // right round wall
+    glFrontFace(GL_CW);
+    glColor3ub (225, 225, 225);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, round_points * 2 - 2, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_right_wall_count));
 
     /* unbind the buffers */
     glBindBuffer(GL_ARRAY_BUFFER, 0);
