@@ -207,7 +207,7 @@ void Toaster::build(){
 
     before_top_slots_count = all_index.size();
     // top of slots
-    top_slot_points = all_points.size();
+    start_slot_points = all_points.size();
     start = p_end;
     p_end += SLOT_LENGTH / SUBDIV_AMT;
     for(int i = start; i <= p_end; i++){
@@ -223,19 +223,21 @@ void Toaster::build(){
         all_points.push_back(v1);
     }
 
+    end_slot_points = all_points.size();
+
     int j = 0;
-    for(int i = start; i <= p_end; i++){
+    for(int i = start; i < p_end; i++){
         even = 2 * i;
         all_index.push_back(even);
         all_index.push_back(even + 2);
-        all_index.push_back(4 + j + top_slot_points);
-        all_index.push_back(0 + j + top_slot_points);
-        all_index.push_back(1 + j + top_slot_points);
-        all_index.push_back(5 + j + top_slot_points);
-        all_index.push_back(6 + j + top_slot_points);
-        all_index.push_back(2 + j + top_slot_points);
-        all_index.push_back(3 + j + top_slot_points);
-        all_index.push_back(7 + j + top_slot_points);
+        all_index.push_back(4 + j + start_slot_points);
+        all_index.push_back(0 + j + start_slot_points);
+        all_index.push_back(1 + j + start_slot_points);
+        all_index.push_back(5 + j + start_slot_points);
+        all_index.push_back(6 + j + start_slot_points);
+        all_index.push_back(2 + j + start_slot_points);
+        all_index.push_back(3 + j + start_slot_points);
+        all_index.push_back(7 + j + start_slot_points);
         all_index.push_back(even + side_count + 2);
         all_index.push_back(even + side_count);
         j += 4;
@@ -250,8 +252,8 @@ void Toaster::build(){
     before_end_top_count = all_index.size();
     // finish top
     start = p_end;
-    p_end = side_count * 2;
-    for(int i = start; i < p_end; i++){
+    p_end = start + SLOT_FROM_RIGHT / SUBDIV_AMT;
+    for(int i = start; i <= p_end; i++){
         even = 2 * i;
         all_index.push_back(even);
         all_index.push_back(even + side_count);
@@ -264,8 +266,72 @@ void Toaster::build(){
     cout << endl;
 
     before_slots_bottom_count = all_index.size();
-    // front slot inside
+    // slot bottoms
+    v1 = all_points[start_slot_points];
+    v1.z -= SLOT_DEPTH;
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
+    v1 = all_points[start_slot_points + 1];
+    v1.z -= SLOT_DEPTH;
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
+    v1 = all_points[end_slot_points - 3];
+    v1.z -= SLOT_DEPTH;
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
+    v1 = all_points[end_slot_points - 4];
+    v1.z -= SLOT_DEPTH;
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
 
+    v1 = all_points[start_slot_points + 2];
+    v1.z -= SLOT_DEPTH;
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
+    v1 = all_points[start_slot_points + 3];
+    v1.z -= SLOT_DEPTH;
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
+    v1 = all_points[end_slot_points - 1];
+    v1.z -= SLOT_DEPTH;
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
+    v1 = all_points[end_slot_points - 2];
+    v1.z -= SLOT_DEPTH;
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
+
+    cout << "slot bottoms" << endl;
+    for(int i = before_slots_bottom_count; i < all_index.size(); i++){
+        cout << all_index[i] << ",";
+    }
+    cout << endl;
+
+    before_front_slot_count = all_index.size();
+    // front slot
+    all_index.push_back(all_index[before_top_slots_count + 3]);
+    all_index.push_back(all_index[before_slots_bottom_count]);
+    all_index.push_back(all_index[before_top_slots_count + 4]);
+    all_index.push_back(all_index[before_slots_bottom_count + 1]);
+    all_index.push_back(all_index[before_end_top_count - 7]);
+    all_index.push_back(all_index[before_slots_bottom_count + 2]);
+    all_index.push_back(all_index[before_end_top_count - 10]);
+    all_index.push_back(all_index[before_slots_bottom_count + 3]);
+    all_index.push_back(all_index[before_top_slots_count + 3]);
+    all_index.push_back(all_index[before_slots_bottom_count]);
+
+    before_back_slot_count = all_index.size();
+    // back slot
+    all_index.push_back(all_index[before_top_slots_count + 7]);
+    all_index.push_back(all_index[before_slots_bottom_count + 4]);
+    all_index.push_back(all_index[before_top_slots_count + 8]);
+    all_index.push_back(all_index[before_slots_bottom_count + 5]);
+    all_index.push_back(all_index[before_end_top_count - 3]);
+    all_index.push_back(all_index[before_slots_bottom_count + 6]);
+    all_index.push_back(all_index[before_end_top_count - 6]);
+    all_index.push_back(all_index[before_slots_bottom_count + 7]);
+    all_index.push_back(all_index[before_top_slots_count + 7]);
+    all_index.push_back(all_index[before_slots_bottom_count + 4]);
 
     total_count = all_index.size();
 
@@ -369,6 +435,34 @@ void Toaster::render(bool outline) const{
     glFrontFace(GL_CW);
     glColor3ub(200, 200, 200);
     glDrawRangeElements(GL_QUAD_STRIP, 0, 0, (SLOT_FROM_RIGHT / SUBDIV_AMT + 1) * 2, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_end_top_count));
+
+    // slots bottom
+    glFrontFace(GL_CW);
+    glColor3ub(170, 170, 170);
+    glDrawRangeElements(GL_QUADS, 0, 0, 8, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_slots_bottom_count));
+
+    // front slot sides
+    glFrontFace(GL_CCW);
+    glColor3ub(150, 150, 150);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_front_slot_count));
+    glColor3ub(130, 130, 130);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_front_slot_count + 2)));
+    glColor3ub(110, 110, 110);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_front_slot_count + 4)));
+    glColor3ub(90, 90, 90);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_front_slot_count + 6)));
+
+    // back slot sides
+    glFrontFace(GL_CCW);
+    glColor3ub(150, 150, 150);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_back_slot_count));
+    glColor3ub(130, 130, 130);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_back_slot_count + 2)));
+    glColor3ub(110, 110, 110);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_back_slot_count + 4)));
+    glColor3ub(90, 90, 90);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_back_slot_count + 6)));
+
 
     /* unbind the buffers */
     glBindBuffer(GL_ARRAY_BUFFER, 0);

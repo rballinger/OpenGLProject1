@@ -29,9 +29,12 @@ private:
         before_right_wall_count,
         before_top_count,
         before_top_slots_count,
-        top_slot_points,
+        start_slot_points,
+        end_slot_points,
         before_end_top_count,
-        before_slots_bottom_count;
+        before_slots_bottom_count,
+        before_front_slot_count,
+        before_back_slot_count;
 
 protected:
 public:
