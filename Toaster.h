@@ -18,6 +18,12 @@ private:
     const float SLOT_SEPARATION = 1.0;
     const float SLOT_WIDTH = 1.5;
     const float SLOT_DEPTH = 4.25;
+    const float GRATE_FROM_FRONT = 0.1;
+    const float GRATE_VERT_SEP = 1.5;
+    const float GRATE_HORIZ_SEP = 1.5;
+    const float GRATE_FROM_SIDE = 1.0;
+    const int NUM_OF_GRATES = 3;
+    const float GRATE_HEIGHT = 3.75;
     int total_count,
         side_count,
         before_bottom_count,
@@ -34,7 +40,9 @@ private:
         before_end_top_count,
         before_slots_bottom_count,
         before_front_slot_count,
-        before_back_slot_count;
+        before_back_slot_count,
+        before_grate_count,
+        grate_points;
 
 protected:
 public:

@@ -7,7 +7,7 @@ using glm::vec3;
 void Toaster::build(){
     glGenBuffers(1, &vertex_buffer);
     glGenBuffers(1, &index_buffer);
-    vec3 v1, v2, c1, c2, c3, c4;
+    vec3 v1, v2, v3, v4, c1, c2, c3, c4, top, bottom, left, right;
 
     // build toaster
 
@@ -271,35 +271,35 @@ void Toaster::build(){
     v1.z -= SLOT_DEPTH;
     all_index.push_back(all_points.size());
     all_points.push_back(v1);
-    v1 = all_points[start_slot_points + 1];
-    v1.z -= SLOT_DEPTH;
+    v2 = all_points[start_slot_points + 1];
+    v2.z -= SLOT_DEPTH;
     all_index.push_back(all_points.size());
-    all_points.push_back(v1);
-    v1 = all_points[end_slot_points - 3];
-    v1.z -= SLOT_DEPTH;
+    all_points.push_back(v2);
+    v2 = all_points[end_slot_points - 3];
+    v2.z -= SLOT_DEPTH;
     all_index.push_back(all_points.size());
-    all_points.push_back(v1);
-    v1 = all_points[end_slot_points - 4];
-    v1.z -= SLOT_DEPTH;
+    all_points.push_back(v2);
+    v2 = all_points[end_slot_points - 4];
+    v2.z -= SLOT_DEPTH;
     all_index.push_back(all_points.size());
-    all_points.push_back(v1);
+    all_points.push_back(v2);
 
-    v1 = all_points[start_slot_points + 2];
-    v1.z -= SLOT_DEPTH;
+    v3 = all_points[start_slot_points + 2];
+    v3.z -= SLOT_DEPTH;
     all_index.push_back(all_points.size());
-    all_points.push_back(v1);
-    v1 = all_points[start_slot_points + 3];
-    v1.z -= SLOT_DEPTH;
+    all_points.push_back(v3);
+    v4 = all_points[start_slot_points + 3];
+    v4.z -= SLOT_DEPTH;
     all_index.push_back(all_points.size());
-    all_points.push_back(v1);
-    v1 = all_points[end_slot_points - 1];
-    v1.z -= SLOT_DEPTH;
+    all_points.push_back(v4);
+    v4 = all_points[end_slot_points - 1];
+    v4.z -= SLOT_DEPTH;
     all_index.push_back(all_points.size());
-    all_points.push_back(v1);
-    v1 = all_points[end_slot_points - 2];
-    v1.z -= SLOT_DEPTH;
+    all_points.push_back(v4);
+    v4 = all_points[end_slot_points - 2];
+    v4.z -= SLOT_DEPTH;
     all_index.push_back(all_points.size());
-    all_points.push_back(v1);
+    all_points.push_back(v4);
 
     cout << "slot bottoms" << endl;
     for(int i = before_slots_bottom_count; i < all_index.size(); i++){
@@ -332,6 +332,43 @@ void Toaster::build(){
     all_index.push_back(all_index[before_slots_bottom_count + 7]);
     all_index.push_back(all_index[before_top_slots_count + 7]);
     all_index.push_back(all_index[before_slots_bottom_count + 4]);
+
+    before_grate_count = all_index.size();
+    // grates
+    bottom = {v1.x + GRATE_FROM_SIDE, v1.y + GRATE_FROM_FRONT, v1.z};
+    all_index.push_back(all_points.size());
+    all_points.push_back(bottom);
+    top = {bottom.x, bottom.y, bottom.z + GRATE_HEIGHT};
+    all_index.push_back(all_points.size());
+    all_points.push_back(top);
+    left = {v1.x, v1.y + GRATE_FROM_FRONT, v1.z + GRATE_HEIGHT};
+    all_index.push_back(all_points.size());
+    all_points.push_back(left);
+    right = {left.x + SLOT_LENGTH, left.y, left.z};
+    all_index.push_back(all_points.size());
+    all_points.push_back(right);
+    for(int i = 0; i < NUM_OF_GRATES; i++){
+        // vertical bars
+        bottom.x += GRATE_HORIZ_SEP;
+        all_index.push_back(all_points.size());
+        all_points.push_back(bottom);
+        top.x += GRATE_HORIZ_SEP;
+        all_index.push_back(all_points.size());
+        all_points.push_back(top);
+    }
+    grate_points = all_index.size() - before_grate_count;
+
+    cout << "grate" << endl;
+    for(int i = before_grate_count; i < all_index.size(); i++){
+        cout << all_index[i] << ",";
+    }
+    cout << endl;
+
+
+
+
+
+    // back grate
 
     total_count = all_index.size();
 
@@ -463,6 +500,10 @@ void Toaster::render(bool outline) const{
     glColor3ub(90, 90, 90);
     glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_back_slot_count + 6)));
 
+    // grates
+    glFrontFace(GL_CCW);
+    glColor3ub(50, 50, 50);
+    glDrawRangeElements(GL_LINES, 0, 0, grate_points, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_grate_count));
 
     /* unbind the buffers */
     glBindBuffer(GL_ARRAY_BUFFER, 0);
