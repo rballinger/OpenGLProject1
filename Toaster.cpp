@@ -210,7 +210,7 @@ void Toaster::build(){
     top_slot_points = all_points.size();
     start = p_end;
     p_end += SLOT_LENGTH / SUBDIV_AMT;
-    for(int i = start; i < p_end; i++){
+    for(int i = start; i <= p_end; i++){
         even = 2 * i;
         v1 = all_points[all_index[even]];
         v1.y += SLOT_FROM_FRONT;
@@ -224,7 +224,7 @@ void Toaster::build(){
     }
 
     int j = 0;
-    for(int i = start; i < p_end; i++){
+    for(int i = start; i <= p_end; i++){
         even = 2 * i;
         all_index.push_back(even);
         all_index.push_back(even + 2);
@@ -256,6 +256,16 @@ void Toaster::build(){
         all_index.push_back(even);
         all_index.push_back(even + side_count);
     }
+
+    cout << "finish top" << endl;
+    for(int i = before_end_top_count; i < all_index.size(); i++){
+        cout << all_index[i] << ",";
+    }
+    cout << endl;
+
+    before_slots_bottom_count = all_index.size();
+    // front slot inside
+
 
     total_count = all_index.size();
 
@@ -354,12 +364,11 @@ void Toaster::render(bool outline) const{
     // room for slots
     glFrontFace(GL_CCW);
     glColor3ub(200, 200, 200);
-    glDrawRangeElements(GL_QUADS, 0, 0, (SLOT_LENGTH / SUBDIV_AMT) * 11 + 1, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_top_slots_count));
+    glDrawRangeElements(GL_QUADS, 0, 0, (2 * SLOT_LENGTH / SUBDIV_AMT) * 6 , GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_top_slots_count));
     // finish top
     glFrontFace(GL_CW);
     glColor3ub(200, 200, 200);
     glDrawRangeElements(GL_QUAD_STRIP, 0, 0, (SLOT_FROM_RIGHT / SUBDIV_AMT + 1) * 2, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_end_top_count));
-
 
     /* unbind the buffers */
     glBindBuffer(GL_ARRAY_BUFFER, 0);

@@ -13,10 +13,11 @@ private:
     const float SUBDIV_MAJ_RAD_AMT = TOASTER_MAJ_RAD / SUBDIV_MAJ_RAD;
     const float SLOT_FROM_LEFT = 1.5;
     const float SLOT_FROM_FRONT = 1.0;
+    const float SLOT_LENGTH = 6.5;
     const float SLOT_FROM_RIGHT = TOASTER_LENGTH - SLOT_FROM_LEFT - SLOT_LENGTH;
     const float SLOT_SEPARATION = 1.0;
     const float SLOT_WIDTH = 1.5;
-    const float SLOT_LENGTH = 6.5;
+    const float SLOT_DEPTH = 4.25;
     int total_count,
         side_count,
         before_bottom_count,
@@ -29,7 +30,8 @@ private:
         before_top_count,
         before_top_slots_count,
         top_slot_points,
-        before_end_top_count;
+        before_end_top_count,
+        before_slots_bottom_count;
 
 protected:
 public:
