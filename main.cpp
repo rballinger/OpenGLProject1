@@ -26,10 +26,22 @@
 
 using namespace std;
 
-ButterDish butterdish;
-Bread bread1;
 Toaster toaster;
+ButterDish butterdish;
 Butter big_butter;
+Butter small_butterN;
+Butter small_butterM;
+Bread bread0;
+Bread bread1;
+Bread bread2;
+Bread bread3;
+Bread bread4;
+Bread bread5;
+Bread bread6;
+Bread bread7;
+Bread bread8;
+Bread bread9;
+
 bool wireframe;
 
 void init_model();
@@ -37,7 +49,23 @@ void win_refresh(GLFWwindow*);
 float arc_ball_rad_square;
 int screen_ctr_x, screen_ctr_y;
 
-glm::mat4 camera_cf; // {glm::translate(glm::mat4(1.0f), glm::vec3{0,0,-5})};
+glm::mat4 camera_cf;
+glm::mat4 toaster_cf;
+glm::mat4 butterdish_cf;
+glm::mat4 big_butter_cf;
+glm::mat4 small_butterN_cf;
+glm::mat4 small_butterM_cf;
+glm::mat4 bread0_cf;
+glm::mat4 bread1_cf;
+glm::mat4 bread2_cf;
+glm::mat4 bread3_cf;
+glm::mat4 bread4_cf;
+glm::mat4 bread5_cf;
+glm::mat4 bread6_cf;
+glm::mat4 bread7_cf;
+glm::mat4 bread8_cf;
+glm::mat4 bread9_cf;
+glm::mat4 * selected_cf_p;
 
 void err_function (int what, const char *msg) {
     cerr << what << " " << msg << endl;
@@ -67,9 +95,17 @@ void win_resize (GLFWwindow * win, int width, int height)
 
 void make_model(){
     butterdish.build();
-    bread1.build();
     toaster.build();
     big_butter.build();
+    small_butterN.build();
+    small_butterM.build();
+    // set up coordinate frames for each object
+    toaster_cf = glm::translate(glm::vec3{3, 5, 0});        // rotate 30 deg around z-axis
+    butterdish_cf = glm::translate(glm::vec3{-8,0,0});      // translate -8 along x-axis
+    butterdish_cf = butterdish_cf * glm::rotate(10.0f, glm::vec3{0, 0, 1});
+    big_butter_cf = butterdish_cf * glm::translate(glm::vec3{0,-1.0,0.75}); // translate -8 along x-axis, 1 along y-axis and 0.75 along z-axis
+    small_butterN_cf = big_butter_cf * glm::translate(glm::vec3{0,3,0});
+    small_butterM_cf = big_butter_cf * glm::translate(glm::vec3(0,4,0));
 }
 
 void win_refresh (GLFWwindow *win) {
@@ -96,25 +132,38 @@ void win_refresh (GLFWwindow *win) {
     glVertex3f (0, 0, S * 1.1);
     glEnd();
 
-
-
+    // place toaster
     glPushMatrix();
-    glTranslatef(-8,0,0);
-    butterdish.render(wireframe);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(10,0,0);
-    bread1.render(wireframe);
-    glPopMatrix();
-
-    glPushMatrix();
+    glMultMatrixf(glm::value_ptr(toaster_cf));
+    glRotatef(30.0f, 0, 0, 1);
     toaster.render(wireframe);
     glPopMatrix();
 
     glPushMatrix();
+    glMultMatrixf(glm::value_ptr(butterdish_cf));
+    butterdish.render(wireframe);
+    glPopMatrix();
+
+    glPushMatrix();
+    glMultMatrixf(glm::value_ptr(big_butter_cf));
+    glScalef(3.0, 8.0, 4.0);
     big_butter.render(wireframe);
     glPopMatrix();
+
+    glPushMatrix();
+    glMultMatrixf(glm::value_ptr(small_butterN_cf));
+    glRotatef(-25.0f, 1, 0, 0);
+    glScalef(3.0, 1.5, 4.0);
+    small_butterN.render(wireframe);
+    glPopMatrix();
+
+    glPushMatrix();
+    glMultMatrixf(glm::value_ptr(small_butterM_cf));
+    glRotatef(-55.0f, 1, 0, 0);
+    glScalef(3.0, 1.5, 4.0);
+    small_butterM.render(wireframe);
+    glPopMatrix();
+
 
 
     /* must swap buffer at the end of render function */
@@ -124,10 +173,32 @@ void win_refresh (GLFWwindow *win) {
 /* action: GLFW_PRESS, GLFW_RELEASE, or GLFW_REPEAT */
 void key_handler (GLFWwindow *win, int key, int scan_code, int action, int mods)
 {
+    if(selected_cf_p == NULL){
+        selected_cf_p = &toaster_cf;
+    }
     cout << __FUNCTION__ << endl;
     if (action != GLFW_PRESS) return;
     if (mods == GLFW_MOD_SHIFT) {
-
+        switch (key) {
+            case GLFW_KEY_LEFT:
+                *selected_cf_p = (*selected_cf_p) * glm::rotate(0.1f, glm::vec3{-1, 0, 0});
+                break;
+            case GLFW_KEY_RIGHT:
+                *selected_cf_p = (*selected_cf_p) * glm::rotate(0.1f, glm::vec3{1, 0, 0});
+                break;
+            case GLFW_KEY_DOWN:
+                *selected_cf_p = (*selected_cf_p) * glm::rotate(0.1f, glm::vec3{0, -1, 0});
+                break;
+            case GLFW_KEY_UP:
+                *selected_cf_p = (*selected_cf_p) * glm::rotate(0.1f, glm::vec3{0, 1, 0});
+                break;
+            case GLFW_KEY_PERIOD:
+                *selected_cf_p = (*selected_cf_p) * glm::rotate(0.1f, glm::vec3{0, 0, -1});
+                break;
+            case GLFW_KEY_SLASH:
+                *selected_cf_p = (*selected_cf_p) * glm::rotate(0.1f, glm::vec3{0, 0, 1});
+                break;
+        }
     }
     else {
         switch (key) {
@@ -137,6 +208,14 @@ void key_handler (GLFWwindow *win, int key, int scan_code, int action, int mods)
             case GLFW_KEY_W:
                 wireframe = !wireframe;
                 break;
+            case GLFW_KEY_T:
+                selected_cf_p = &toaster_cf;
+                break;
+            case GLFW_KEY_D:
+                selected_cf_p = &butterdish_cf;
+                break;
+            case GLFW_KEY_B:
+                selected_cf_p = &big_butter_cf;
             case GLFW_KEY_0:
             case GLFW_KEY_1:
             case GLFW_KEY_2:
@@ -144,6 +223,27 @@ void key_handler (GLFWwindow *win, int key, int scan_code, int action, int mods)
             case GLFW_KEY_4:
             case GLFW_KEY_5:
             case GLFW_KEY_6:
+            case GLFW_KEY_7:
+            case GLFW_KEY_8:
+            case GLFW_KEY_9:
+                break;
+            case GLFW_KEY_LEFT:
+                *selected_cf_p = glm::translate(glm::vec3{-0.2f, 0, 0}) * (*selected_cf_p);
+                break;
+            case GLFW_KEY_RIGHT:
+                *selected_cf_p = glm::translate(glm::vec3{0.2f, 0, 0}) * (*selected_cf_p);
+                break;
+            case GLFW_KEY_DOWN:
+                *selected_cf_p = glm::translate(glm::vec3{0, -0.2f, 0}) * (*selected_cf_p);
+                break;
+            case GLFW_KEY_UP:
+                *selected_cf_p = glm::translate(glm::vec3{0, 0.2f, 0}) * (*selected_cf_p);
+                break;
+            case GLFW_KEY_PERIOD:
+                *selected_cf_p = glm::translate(glm::vec3{0, 0, -0.2f}) * (*selected_cf_p);
+                break;
+            case GLFW_KEY_SLASH:
+                *selected_cf_p = glm::translate(glm::vec3{0, 0, 0.2f}) * (*selected_cf_p);
                 break;
         }
     }
