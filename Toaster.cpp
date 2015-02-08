@@ -430,11 +430,40 @@ void Toaster::build(){
     }
     cout << endl;
 
+    before_handle_count = all_index.size();
+    // handle
+    v1 = all_points[all_index[1]];
+    v1.y += (TOASTER_WIDTH / 2 - HANDLE_WIDTH / 2);
+    v1.z += HANDLE_FROM_GROUND;
+    all_index.push_back(all_points.size());
+    all_points.push_back(v1);
+    v2 = {v1.x, v1.y + HANDLE_WIDTH, v1.z};
+    all_index.push_back(all_points.size());
+    all_points.push_back(v2);
+    v3 = {v1.x - HANDLE_LENGTH, v1.y, v1.z};
+    all_index.push_back(all_points.size());
+    all_points.push_back(v3);
+    v4 = {v2.x - HANDLE_LENGTH, v2.y, v2.z};
+    all_index.push_back(all_points.size());
+    all_points.push_back(v4);
+    c1 = {v1.x, v1.y, v1.z - HANDLE_HEIGHT};
+    all_index.push_back(all_points.size());
+    all_points.push_back(c1);
+    c2 = {v2.x, v2.y, v2.z - HANDLE_HEIGHT};
+    all_index.push_back(all_points.size());
+    all_points.push_back(c2);
 
+    for(int i = 0; i < 2; i++){
+        all_index.push_back(all_index[before_handle_count + i]);
+        all_index.push_back(all_index[before_handle_count + 2 + i]);
+        all_index.push_back(all_index[before_handle_count + 4 + i]);
+    }
 
-
-
-    // back grate
+    cout << "handle" << endl;
+    for(int i = before_grate_count; i < all_index.size(); i++){
+        cout << all_index[i] << ",";
+    }
+    cout << endl;
 
     total_count = all_index.size();
 
@@ -478,12 +507,12 @@ void Toaster::render(bool outline) const{
 
     // front side
     glFrontFace(GL_CCW);
-    glColor3ub (255, 255, 255);
+    glColor3ub (245, 245, 245);
     glDrawRangeElements(GL_QUAD_STRIP, 0, 0, side_count, GL_UNSIGNED_SHORT, 0);
 
     // back side
     glFrontFace(GL_CW);
-    glColor3ub (255, 255, 255);
+    glColor3ub (245, 245, 245);
     glDrawRangeElements(GL_QUAD_STRIP, 0, 0, side_count, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * side_count));
 
     // bottom side
@@ -570,6 +599,19 @@ void Toaster::render(bool outline) const{
     glFrontFace(GL_CCW);
     glColor3ub(50, 50, 50);
     glDrawRangeElements(GL_LINES, 0, 0, grate_points, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_grate_count));
+
+    // handle
+    glFrontFace(GL_CCW);
+    glColor3ub (135, 135, 135);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * before_handle_count));
+    glFrontFace(GL_CCW);
+    glColor3ub (110, 110, 110);
+    glDrawRangeElements(GL_QUAD_STRIP, 0, 0, 4, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_handle_count + 2)));
+    glFrontFace(GL_CCW);
+    glColor3ub (160, 160, 160);
+    glDrawRangeElements(GL_TRIANGLES, 0, 0, 3, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_handle_count + 6)));
+    glFrontFace(GL_CW);
+    glDrawRangeElements(GL_TRIANGLES, 0, 0, 3, GL_UNSIGNED_SHORT, (void *) (sizeof(GLushort) * (before_handle_count + 9)));
 
     /* unbind the buffers */
     glBindBuffer(GL_ARRAY_BUFFER, 0);

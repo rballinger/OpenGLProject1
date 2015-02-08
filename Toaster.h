@@ -24,6 +24,10 @@ private:
     const float GRATE_FROM_SIDE = 1.0;
     const int NUM_OF_GRATES = 3;
     const float GRATE_HEIGHT = 3.75;
+    const float HANDLE_LENGTH = 3.0;
+    const float HANDLE_WIDTH = 2.5;
+    const float HANDLE_HEIGHT = 2.0;
+    const float HANDLE_FROM_GROUND = 7.5;
     int total_count,
         side_count,
         before_bottom_count,
@@ -42,7 +46,8 @@ private:
         before_front_slot_count,
         before_back_slot_count,
         before_grate_count,
-        grate_points;
+        grate_points,
+        before_handle_count;
 
 protected:
 public:
