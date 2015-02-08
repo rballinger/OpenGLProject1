@@ -1,3 +1,9 @@
+/**
+ *  Author: Ryan Ballinger      Date: 2-8-15
+ *  Professor: Dulimarta        Project: Objects & Transformations
+ *  File: Butter.cpp
+ */
+
 #include "Butter.h"
 
 using glm::vec3;

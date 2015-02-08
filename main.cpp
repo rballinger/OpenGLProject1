@@ -1,3 +1,9 @@
+/**
+ *  Author: Ryan Ballinger      Date: 2-8-15
+ *  Professor: Dulimarta        Project: Objects & Transformations
+ *  File: main.cpp
+ */
+
 #include <iostream>
 #include <cmath>
 #include <algorithm>
@@ -39,10 +45,14 @@ bool wireframe;
 
 void init_model();
 void win_refresh(GLFWwindow*);
-float arc_ball_rad_square;
+
 int screen_ctr_x, screen_ctr_y;
 
 glm::mat4 camera_cf;
+glm::mat4 camera_cf1;
+glm::mat4 camera_cf2;
+glm::mat4 camera_cf3;
+glm::mat4 camera_cf4;
 glm::mat4 toaster_cf;
 glm::mat4 butterdish_cf;
 glm::mat4 big_butter_cf;
@@ -64,8 +74,6 @@ void win_resize (GLFWwindow * win, int width, int height)
     glfwGetWindowSize(win, &w, &h);
     screen_ctr_x = w / 2.0;
     screen_ctr_y = h / 2.0;
-    float rad = min(h,w)/2;
-    arc_ball_rad_square = rad * rad;
     /* Use the entire window for our view port */
     glViewport(0, 0, width, height);
     /* Use GL_PROJECTION to select the type of synthetic camera */
@@ -94,9 +102,7 @@ void make_model(){
     small_butterM_cf = big_butter_cf * glm::translate(glm::vec3(0,4,0));
 
     // setup bread
-    cout << "building: ";
     for(int i = 0; i < BREAD_COUNT; i++){
-        cout << i << ",";
         Bread bread;
         bread_objects.push_back(bread);
         bread_objects[i].build();
@@ -104,9 +110,7 @@ void make_model(){
         bread_cf = toaster_cf * glm::translate(glm::vec3(i / 2.0f,-0.375 - i,3.25));
         bread_cf = bread_cf * glm::rotate(1.4f, glm::vec3{1,0,0});
         bread_cfs.push_back(bread_cf);
-        cout << bread_cf << endl;
     }
-    cout << endl;
 }
 
 void win_refresh (GLFWwindow *win) {
@@ -121,58 +125,55 @@ void win_refresh (GLFWwindow *win) {
 
     const float& S = 1;
     /* draw the axes */
-    glBegin(GL_LINES);
-    glColor3ub (255, 0, 0);
-    glVertex2i (0, 0);
-    glVertex2f (S * 1.1, 0);
-    glColor3ub (0, 255, 0);
-    glVertex2i (0, 0);
-    glVertex2f (0, S * 1.1);
-    glColor3ub (0, 0, 255);
-    glVertex2i (0, 0);
-    glVertex3f (0, 0, S * 1.1);
-    glEnd();
+//    glBegin(GL_LINES);
+//    glColor3ub (255, 0, 0);
+//    glVertex2i (0, 0);
+//    glVertex2f (S * 1.1, 0);
+//    glColor3ub (0, 255, 0);
+//    glVertex2i (0, 0);
+//    glVertex2f (0, S * 1.1);
+//    glColor3ub (0, 0, 255);
+//    glVertex2i (0, 0);
+//    glVertex3f (0, 0, S * 1.1);
+//    glEnd();
 
     // place toaster
     glPushMatrix();
     glMultMatrixf(glm::value_ptr(toaster_cf));
     toaster.render(wireframe);
     glPopMatrix();
-
+    // place butterdish
     glPushMatrix();
     glMultMatrixf(glm::value_ptr(butterdish_cf));
     butterdish.render(wireframe);
     glPopMatrix();
-
+    // place big block of butter
     glPushMatrix();
     glMultMatrixf(glm::value_ptr(big_butter_cf));
     glScalef(3.0, 8.0, 4.0);
     big_butter.render(wireframe);
     glPopMatrix();
-
+    // place first small block of butter
     glPushMatrix();
     glMultMatrixf(glm::value_ptr(small_butterN_cf));
     glRotatef(-25.0f, 1, 0, 0);
     glScalef(3.0, 1.5, 4.0);
     small_butterN.render(wireframe);
     glPopMatrix();
-
+    // place second small block of butter
     glPushMatrix();
     glMultMatrixf(glm::value_ptr(small_butterM_cf));
     glRotatef(-55.0f, 1, 0, 0);
     glScalef(3.0, 1.5, 4.0);
     small_butterM.render(wireframe);
     glPopMatrix();
-
-    cout << "rendering: ";
+    // place all the bread
     for(int i = 0; i < BREAD_COUNT; i++){
-        cout << i << ",";
         glPushMatrix();
         glMultMatrixf(glm::value_ptr(bread_cfs[i]));
         bread_objects[i].render(wireframe);
         glPopMatrix();
     }
-    cout << endl;
 
     /* must swap buffer at the end of render function */
     glfwSwapBuffers(win);
@@ -213,6 +214,18 @@ void key_handler (GLFWwindow *win, int key, int scan_code, int action, int mods)
             case GLFW_KEY_ESCAPE:
                 glfwSetWindowShouldClose(win, true);
                 break;
+            case GLFW_KEY_Z:
+                camera_cf = camera_cf1;
+                break;
+            case GLFW_KEY_X:
+                camera_cf = camera_cf2;
+                break;
+            case GLFW_KEY_C:
+                camera_cf = camera_cf3;
+                break;
+            case GLFW_KEY_V:
+                camera_cf = camera_cf4;
+                break;
             case GLFW_KEY_W:
                 wireframe = !wireframe;
                 break;
@@ -224,35 +237,48 @@ void key_handler (GLFWwindow *win, int key, int scan_code, int action, int mods)
                 break;
             case GLFW_KEY_B:
                 selected_cf_p = &big_butter_cf;
-            case GLFW_KEY_0:
+                break;
+            case GLFW_KEY_N:
+                selected_cf_p = &small_butterN_cf;
+                break;
+            case GLFW_KEY_M:
+                selected_cf_p = &small_butterM_cf;
+                break;
+            case GLFW_KEY_F1:
                 selected_cf_p = &(bread_cfs[0]);
                 break;
-            case GLFW_KEY_1:
+            case GLFW_KEY_F2:
                 selected_cf_p = &(bread_cfs[1]);
                 break;
-            case GLFW_KEY_2:
+            case GLFW_KEY_F3:
                 selected_cf_p = &(bread_cfs[2]);
                 break;
-            case GLFW_KEY_3:
+            case GLFW_KEY_F4:
                 selected_cf_p = &(bread_cfs[3]);
                 break;
-            case GLFW_KEY_4:
+            case GLFW_KEY_F5:
                 selected_cf_p = &(bread_cfs[4]);
                 break;
-            case GLFW_KEY_5:
+            case GLFW_KEY_F6:
                 selected_cf_p = &(bread_cfs[5]);
                 break;
-            case GLFW_KEY_6:
+            case GLFW_KEY_F7:
                 selected_cf_p = &(bread_cfs[6]);
                 break;
-            case GLFW_KEY_7:
+            case GLFW_KEY_F8:
                 selected_cf_p = &(bread_cfs[7]);
                 break;
-            case GLFW_KEY_8:
+            case GLFW_KEY_F9:
                 selected_cf_p = &(bread_cfs[8]);
                 break;
-            case GLFW_KEY_9:
+            case GLFW_KEY_F10:
                 selected_cf_p = &(bread_cfs[9]);
+                break;
+            case GLFW_KEY_F11:
+                selected_cf_p = &(bread_cfs[10]);
+                break;
+            case GLFW_KEY_F12:
+                selected_cf_p = &(bread_cfs[11]);
                 break;
             case GLFW_KEY_LEFT:
                 *selected_cf_p = glm::translate(glm::vec3{-0.2f, 0, 0}) * (*selected_cf_p);
@@ -277,75 +303,26 @@ void key_handler (GLFWwindow *win, int key, int scan_code, int action, int mods)
     win_refresh(win);
 }
 
-/*
-    The virtual trackball technique implemented here is based on:
-    https://www.opengl.org/wiki/Object_Mouse_Trackball
-*/
-void cursor_handler (GLFWwindow *win, double xpos, double ypos) {
-    int state = glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_LEFT);
-    static glm::vec3 first_click;
-    static glm::mat4 current_cam;
-    static bool is_tracking = false;
-
-    glm::vec3 this_vec;
-    if (state == GLFW_PRESS) {
-        /* TODO: use glUnproject? */
-        float x = (xpos - screen_ctr_x);
-        float y = -(ypos - screen_ctr_y);
-        float hypot_square = x * x + y * y;
-        float z;
-
-        /* determine whether the mouse is on the sphere or on the hyperbolic sheet */
-        if (2 * hypot_square < arc_ball_rad_square)
-            z = sqrt(arc_ball_rad_square - hypot_square);
-        else
-            z = arc_ball_rad_square / 2.0 / sqrt(hypot_square);
-        if (!is_tracking) {
-            /* store the mouse position when the button was pressed for the first time */
-            first_click = glm::normalize(glm::vec3{x, y, z});
-            current_cam = camera_cf;
-            is_tracking = true;
-        }
-        else {
-            /* compute the rotation w.r.t the initial click */
-            this_vec = glm::normalize(glm::vec3{x, y, z});
-            /* determine axis of rotation */
-            glm::vec3 N = glm::cross(first_click, this_vec);
-
-            /* determine the angle of rotation */
-            float theta = glm::angle(first_click, this_vec);
-
-            /* create a quaternion of the rotation */
-            glm::quat q{cos(theta / 2), sin(theta / 2) * N};
-            /* apply the rotation w.r.t to the current camera CF */
-            camera_cf = current_cam * glm::toMat4(glm::normalize(q));
-        }
-        win_refresh(win);
-    }
-    else {
-        is_tracking = false;
-    }
-}
-
-void scroll_handler (GLFWwindow *win, double xscroll, double yscroll) {
-    /* translate along the camera Z-axis */
-    glm::mat4 z_translate = glm::translate((float)yscroll * glm::vec3{0, 0, 1});
-    camera_cf =  z_translate * camera_cf;
-    win_refresh(win);
-
-}
-
 void init_gl() {
     glEnable (GL_DEPTH_TEST);
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
     glEnable(GL_CULL_FACE);
-    glLineWidth(3.0);
+    glLineWidth(2.0);
 
-    /* place the camera at Z=+5 (notice that the sign is OPPOSITE!) */
-    camera_cf *= glm::translate(glm::vec3{0, 0, -7});
+    /* initialize camera angles (note opposite values) */
+    camera_cf1 *= glm::translate(glm::vec3{-4, -3, -15});
+    camera_cf1 *= glm::rotate(-0.523f, glm::vec3{1,0,0});
+    camera_cf2 *= glm::translate(glm::vec3{6, 3, -8});
+    camera_cf2 *= glm::rotate(-0.7f, glm::vec3{1,0,0});
+    camera_cf2 *= glm::rotate(0.3f, glm::vec3{0,0,1});
+    camera_cf3 *= glm::translate(glm::vec3{4, 0, -18});
+    camera_cf3 *= glm::rotate(3.8f, glm::vec3{0,0,1});
+    camera_cf3 *= glm::rotate(0.5f, glm::vec3{1,0,0});
+    camera_cf4 *= glm::translate(glm::vec3{-2, -3, -11});
+    camera_cf4 *= glm::rotate(-2.5f, glm::vec3{1,0,0});
+    camera_cf = camera_cf1;
 }
-
 
 int main() {
     wireframe = false;
@@ -372,8 +349,6 @@ int main() {
     // glfwSetWindowSizeCallback(win, win_resize);  /* use this for non-retina displays */
     glfwSetFramebufferSizeCallback(win, win_resize); /* use this for retina displays */
     glfwSetKeyCallback(win, key_handler);
-    glfwSetCursorPosCallback(win, cursor_handler);
-    glfwSetScrollCallback(win, scroll_handler);
     glfwMakeContextCurrent(win);
 
     /* glewInit must be invoked AFTER glfwMakeContextCurrent() */

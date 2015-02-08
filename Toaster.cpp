@@ -1,3 +1,9 @@
+/**
+ *  Author: Ryan Ballinger      Date: 2-8-15
+ *  Professor: Dulimarta        Project: Objects & Transformations
+ *  File: Toaster.cpp
+ */
+
 #include <cmath>
 #include "Toaster.h"
 #define M_PI           3.14159265358979323846
@@ -41,24 +47,12 @@ void Toaster::build(){
 
     side_count = all_index.size();
 
-    cout << "front side" << endl;
-    for(int i = 0; i < side_count; i++){
-        cout << all_index[i] << ",";
-    }
-    cout << endl;
-
     // toaster back side
     for(auto v : all_points){
         v.y += TOASTER_WIDTH;
         all_index.push_back(all_points.size());
         all_points.push_back(v);
     }
-
-    cout << "back side" << endl;
-    for(int i = side_count; i < side_count * 2; i++){
-        cout << all_index[i] << ",";
-    }
-    cout << endl;
 
     before_bottom_count = all_index.size();
     // toaster bottom
@@ -68,12 +62,6 @@ void Toaster::build(){
         all_index.push_back(odd);
         all_index.push_back(odd + side_count);
     }
-
-    cout << "bottom side" << endl;
-    for(int i = before_bottom_count; i < all_index.size(); i++){
-        cout << all_index[i] << ",";
-    }
-    cout << endl;
 
     before_left_top_count = all_index.size();
     // left round top side
@@ -101,12 +89,6 @@ void Toaster::build(){
 
     round_points = all_index.size() - before_left_top_count;
 
-    cout << "left top" << endl;
-    for(int i = before_left_top_count; i < all_index.size(); i++){
-        cout << all_index[i] << ",";
-    }
-    cout << endl;
-
     before_right_top_count = all_index.size();
     // right round top side
     c2.y += TOASTER_WIDTH / 2;  // center of triangle fan
@@ -130,12 +112,6 @@ void Toaster::build(){
     all_index.push_back(side_count - 2);
     c2.y -= TOASTER_WIDTH / 2;
 
-    cout << "right top" << endl;
-    for(int i = before_right_top_count; i < all_index.size(); i++){
-        cout << all_index[i] << ",";
-    }
-    cout << endl;
-
     before_round_bottom_count = all_index.size();
     // bottom of round sides
     for(int i = before_left_top_count; i < before_round_bottom_count; i++){
@@ -155,24 +131,12 @@ void Toaster::build(){
         }
     }
 
-    cout << "bottom round sides" << endl;
-    for(int i = before_round_bottom_count; i < all_index.size(); i++){
-        cout << all_index[i] << ",";
-    }
-    cout << endl;
-
     before_left_wall_count = all_index.size();
-//    left wall
+    //    left wall
     for(int i = before_left_top_count + 1; i < before_round_bottom_count - round_points; i++){
         all_index.push_back(all_index[i]);
         all_index.push_back(all_index[i + round_points * 2]);
     }
-
-    cout << "left wall" << endl;
-    for(int i = before_left_wall_count; i < all_index.size(); i++){
-        cout << all_index[i] << ",";
-    }
-    cout << endl;
 
     before_right_wall_count = all_index.size();
     // right wall
@@ -180,12 +144,6 @@ void Toaster::build(){
         all_index.push_back(all_index[i]);
         all_index.push_back(all_index[i + round_points * 2]);
     }
-
-    cout << "right wall" << endl;
-    for(int i = before_right_wall_count; i < all_index.size(); i++){
-        cout << all_index[i] << ",";
-    }
-    cout << endl;
 
     before_top_count = all_index.size();
     // top
@@ -197,13 +155,6 @@ void Toaster::build(){
         all_index.push_back(even);
         all_index.push_back(even + side_count);
     }
-
-    cout << "top" << endl;
-    for(int i = before_top_count; i < all_index.size(); i++){
-        cout << all_index[i] << ",";
-    }
-    cout << endl;
-
 
     before_top_slots_count = all_index.size();
     // top of slots
@@ -243,12 +194,6 @@ void Toaster::build(){
         j += 4;
     }
 
-    cout << "top of slots" << endl;
-    for(int i = before_top_slots_count; i < all_index.size(); i++){
-        cout << all_index[i] << ",";
-    }
-    cout << endl;
-
     before_end_top_count = all_index.size();
     // finish top
     start = p_end;
@@ -258,12 +203,6 @@ void Toaster::build(){
         all_index.push_back(even);
         all_index.push_back(even + side_count);
     }
-
-    cout << "finish top" << endl;
-    for(int i = before_end_top_count; i < all_index.size(); i++){
-        cout << all_index[i] << ",";
-    }
-    cout << endl;
 
     before_slots_bottom_count = all_index.size();
     // slot bottoms
@@ -300,12 +239,6 @@ void Toaster::build(){
     c4.z -= SLOT_DEPTH;
     all_index.push_back(all_points.size());
     all_points.push_back(c4);
-
-    cout << "slot bottoms" << endl;
-    for(int i = before_slots_bottom_count; i < all_index.size(); i++){
-        cout << all_index[i] << ",";
-    }
-    cout << endl;
 
     before_front_slot_count = all_index.size();
     // front slot
@@ -424,12 +357,6 @@ void Toaster::build(){
     }
     grate_points = all_index.size() - before_grate_count;
 
-    cout << "grate" << endl;
-    for(int i = before_grate_count; i < all_index.size(); i++){
-        cout << all_index[i] << ",";
-    }
-    cout << endl;
-
     before_handle_count = all_index.size();
     // handle
     v1 = all_points[all_index[1]];
@@ -458,12 +385,6 @@ void Toaster::build(){
         all_index.push_back(all_index[before_handle_count + 2 + i]);
         all_index.push_back(all_index[before_handle_count + 4 + i]);
     }
-
-    cout << "handle" << endl;
-    for(int i = before_grate_count; i < all_index.size(); i++){
-        cout << all_index[i] << ",";
-    }
-    cout << endl;
 
     total_count = all_index.size();
 

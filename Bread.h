@@ -1,4 +1,11 @@
+/**
+ *  Author: Ryan Ballinger      Date: 2-8-15
+ *  Professor: Dulimarta        Project: Objects & Transformations
+ *  File: Bread.h
+ */
+
 #include "BufferObject.h"
+
 class Bread : public BufferObject {
 private:
     const float BREAD_THICKNESS = 0.75;

@@ -1,3 +1,9 @@
+/**
+ *  Author: Ryan Ballinger      Date: 2-8-15
+ *  Professor: Dulimarta        Project: Objects & Transformations
+ *  File: Bread.cpp
+ */
+
 #include <cmath>
 #include "Bread.h"
 #define M_PI           3.14159265358979323846

@@ -1,3 +1,9 @@
+/**
+ *  Author: Ryan Ballinger      Date: 2-8-15
+ *  Professor: Dulimarta        Project: Objects & Transformations
+ *  File: BufferObject.h
+ */
+
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -14,6 +20,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <glm/glm.hpp>
+
 using namespace std;
 
 #ifndef BufferObject_H

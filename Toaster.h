@@ -1,4 +1,11 @@
+/**
+ *  Author: Ryan Ballinger      Date: 2-8-15
+ *  Professor: Dulimarta        Project: Objects & Transformations
+ *  File: Toaster.h
+ */
+
 #include "BufferObject.h"
+
 class Toaster : public BufferObject {
 private:
     const float TOASTER_WIDTH = 6.0;

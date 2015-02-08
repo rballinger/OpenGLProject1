@@ -1,4 +1,11 @@
+/**
+ *  Author: Ryan Ballinger      Date: 2-8-15
+ *  Professor: Dulimarta        Project: Objects & Transformations
+ *  File: Butter.h
+ */
+
 #include "BufferObject.h"
+
 class Butter : public BufferObject {
 private:
     const float BUTTER_SIDE_LEN = 0.5;

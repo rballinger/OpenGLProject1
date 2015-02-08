@@ -1,3 +1,9 @@
+/**
+ *  Author: Ryan Ballinger      Date: 2-8-15
+ *  Professor: Dulimarta        Project: Objects & Transformations
+ *  File: ButterDish.h
+ */
+
 #include "BufferObject.h"
 class ButterDish : public BufferObject {
 private:
