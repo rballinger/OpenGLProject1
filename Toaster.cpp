@@ -275,31 +275,31 @@ void Toaster::build(){
     v2.z -= SLOT_DEPTH;
     all_index.push_back(all_points.size());
     all_points.push_back(v2);
-    v2 = all_points[end_slot_points - 3];
-    v2.z -= SLOT_DEPTH;
-    all_index.push_back(all_points.size());
-    all_points.push_back(v2);
-    v2 = all_points[end_slot_points - 4];
-    v2.z -= SLOT_DEPTH;
-    all_index.push_back(all_points.size());
-    all_points.push_back(v2);
-
-    v3 = all_points[start_slot_points + 2];
+    v3 = all_points[end_slot_points - 3];
     v3.z -= SLOT_DEPTH;
     all_index.push_back(all_points.size());
     all_points.push_back(v3);
-    v4 = all_points[start_slot_points + 3];
+    v4 = all_points[end_slot_points - 4];
     v4.z -= SLOT_DEPTH;
     all_index.push_back(all_points.size());
     all_points.push_back(v4);
-    v4 = all_points[end_slot_points - 1];
-    v4.z -= SLOT_DEPTH;
+
+    c1 = all_points[start_slot_points + 2];
+    c1.z -= SLOT_DEPTH;
     all_index.push_back(all_points.size());
-    all_points.push_back(v4);
-    v4 = all_points[end_slot_points - 2];
-    v4.z -= SLOT_DEPTH;
+    all_points.push_back(c1);
+    c2 = all_points[start_slot_points + 3];
+    c2.z -= SLOT_DEPTH;
     all_index.push_back(all_points.size());
-    all_points.push_back(v4);
+    all_points.push_back(c2);
+    c3 = all_points[end_slot_points - 1];
+    c3.z -= SLOT_DEPTH;
+    all_index.push_back(all_points.size());
+    all_points.push_back(c3);
+    c4 = all_points[end_slot_points - 2];
+    c4.z -= SLOT_DEPTH;
+    all_index.push_back(all_points.size());
+    all_points.push_back(c4);
 
     cout << "slot bottoms" << endl;
     for(int i = before_slots_bottom_count; i < all_index.size(); i++){
@@ -342,6 +342,72 @@ void Toaster::build(){
     all_index.push_back(all_points.size());
     all_points.push_back(top);
     left = {v1.x, v1.y + GRATE_FROM_FRONT, v1.z + GRATE_HEIGHT};
+    all_index.push_back(all_points.size());
+    all_points.push_back(left);
+    right = {left.x + SLOT_LENGTH, left.y, left.z};
+    all_index.push_back(all_points.size());
+    all_points.push_back(right);
+    for(int i = 0; i < NUM_OF_GRATES; i++){
+        // vertical bars
+        bottom.x += GRATE_HORIZ_SEP;
+        all_index.push_back(all_points.size());
+        all_points.push_back(bottom);
+        top.x += GRATE_HORIZ_SEP;
+        all_index.push_back(all_points.size());
+        all_points.push_back(top);
+    }
+
+    bottom = {v2.x + GRATE_FROM_SIDE, v2.y - GRATE_FROM_FRONT, v2.z};
+    all_index.push_back(all_points.size());
+    all_points.push_back(bottom);
+    top = {bottom.x, bottom.y, bottom.z + GRATE_HEIGHT};
+    all_index.push_back(all_points.size());
+    all_points.push_back(top);
+    left = {v2.x, v2.y - GRATE_FROM_FRONT, v2.z + GRATE_HEIGHT};
+    all_index.push_back(all_points.size());
+    all_points.push_back(left);
+    right = {left.x + SLOT_LENGTH, left.y, left.z};
+    all_index.push_back(all_points.size());
+    all_points.push_back(right);
+    for(int i = 0; i < NUM_OF_GRATES; i++){
+        // vertical bars
+        bottom.x += GRATE_HORIZ_SEP;
+        all_index.push_back(all_points.size());
+        all_points.push_back(bottom);
+        top.x += GRATE_HORIZ_SEP;
+        all_index.push_back(all_points.size());
+        all_points.push_back(top);
+    }
+
+    bottom = {c1.x + GRATE_FROM_SIDE, c1.y + GRATE_FROM_FRONT, c1.z};
+    all_index.push_back(all_points.size());
+    all_points.push_back(bottom);
+    top = {bottom.x, bottom.y, bottom.z + GRATE_HEIGHT};
+    all_index.push_back(all_points.size());
+    all_points.push_back(top);
+    left = {c1.x, c1.y + GRATE_FROM_FRONT, c1.z + GRATE_HEIGHT};
+    all_index.push_back(all_points.size());
+    all_points.push_back(left);
+    right = {left.x + SLOT_LENGTH, left.y, left.z};
+    all_index.push_back(all_points.size());
+    all_points.push_back(right);
+    for(int i = 0; i < NUM_OF_GRATES; i++){
+        // vertical bars
+        bottom.x += GRATE_HORIZ_SEP;
+        all_index.push_back(all_points.size());
+        all_points.push_back(bottom);
+        top.x += GRATE_HORIZ_SEP;
+        all_index.push_back(all_points.size());
+        all_points.push_back(top);
+    }
+
+    bottom = {c2.x + GRATE_FROM_SIDE, c2.y - GRATE_FROM_FRONT, c2.z};
+    all_index.push_back(all_points.size());
+    all_points.push_back(bottom);
+    top = {bottom.x, bottom.y, bottom.z + GRATE_HEIGHT};
+    all_index.push_back(all_points.size());
+    all_points.push_back(top);
+    left = {c2.x, c2.y - GRATE_FROM_FRONT, c2.z + GRATE_HEIGHT};
     all_index.push_back(all_points.size());
     all_points.push_back(left);
     right = {left.x + SLOT_LENGTH, left.y, left.z};
