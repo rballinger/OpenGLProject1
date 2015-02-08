@@ -24,6 +24,8 @@
 #include "Toaster.h"
 #include "Butter.h"
 
+#define BREAD_COUNT 12
+
 using namespace std;
 
 Toaster toaster;
@@ -31,16 +33,7 @@ ButterDish butterdish;
 Butter big_butter;
 Butter small_butterN;
 Butter small_butterM;
-Bread bread0;
-Bread bread1;
-Bread bread2;
-Bread bread3;
-Bread bread4;
-Bread bread5;
-Bread bread6;
-Bread bread7;
-Bread bread8;
-Bread bread9;
+vector<Bread> bread_objects;
 
 bool wireframe;
 
@@ -55,16 +48,7 @@ glm::mat4 butterdish_cf;
 glm::mat4 big_butter_cf;
 glm::mat4 small_butterN_cf;
 glm::mat4 small_butterM_cf;
-glm::mat4 bread0_cf;
-glm::mat4 bread1_cf;
-glm::mat4 bread2_cf;
-glm::mat4 bread3_cf;
-glm::mat4 bread4_cf;
-glm::mat4 bread5_cf;
-glm::mat4 bread6_cf;
-glm::mat4 bread7_cf;
-glm::mat4 bread8_cf;
-glm::mat4 bread9_cf;
+vector <glm::mat4> bread_cfs;
 glm::mat4 * selected_cf_p;
 
 void err_function (int what, const char *msg) {
@@ -99,13 +83,30 @@ void make_model(){
     big_butter.build();
     small_butterN.build();
     small_butterM.build();
-    // set up coordinate frames for each object
-    toaster_cf = glm::translate(glm::vec3{3, 5, 0});        // rotate 30 deg around z-axis
-    butterdish_cf = glm::translate(glm::vec3{-8,0,0});      // translate -8 along x-axis
-    butterdish_cf = butterdish_cf * glm::rotate(10.0f, glm::vec3{0, 0, 1});
+
+    // setup coordinate frames for each object
+    toaster_cf = glm::translate(glm::vec3{3, 5, 0});                    // translate 3 along x-axis and 5 along y-axis
+    toaster_cf = toaster_cf * glm::rotate(0.52f, glm::vec3{0, 0, 1});   // rotate 30 deg around z-axis
+    butterdish_cf = glm::translate(glm::vec3{-8,0,0});                  // translate -8 along x-axis
+    butterdish_cf = butterdish_cf * glm::rotate(3.66f, glm::vec3{0, 0, 1}); // rotate 210 deg around z-axis
     big_butter_cf = butterdish_cf * glm::translate(glm::vec3{0,-1.0,0.75}); // translate -8 along x-axis, 1 along y-axis and 0.75 along z-axis
     small_butterN_cf = big_butter_cf * glm::translate(glm::vec3{0,3,0});
     small_butterM_cf = big_butter_cf * glm::translate(glm::vec3(0,4,0));
+
+    // setup bread
+    cout << "building: ";
+    for(int i = 0; i < BREAD_COUNT; i++){
+        cout << i << ",";
+        Bread bread;
+        bread_objects.push_back(bread);
+        bread_objects[i].build();
+        glm::mat4 bread_cf;
+        bread_cf = toaster_cf * glm::translate(glm::vec3(i / 2.0f,-0.375 - i,3.25));
+        bread_cf = bread_cf * glm::rotate(1.4f, glm::vec3{1,0,0});
+        bread_cfs.push_back(bread_cf);
+        cout << bread_cf << endl;
+    }
+    cout << endl;
 }
 
 void win_refresh (GLFWwindow *win) {
@@ -135,7 +136,6 @@ void win_refresh (GLFWwindow *win) {
     // place toaster
     glPushMatrix();
     glMultMatrixf(glm::value_ptr(toaster_cf));
-    glRotatef(30.0f, 0, 0, 1);
     toaster.render(wireframe);
     glPopMatrix();
 
@@ -164,7 +164,15 @@ void win_refresh (GLFWwindow *win) {
     small_butterM.render(wireframe);
     glPopMatrix();
 
-
+    cout << "rendering: ";
+    for(int i = 0; i < BREAD_COUNT; i++){
+        cout << i << ",";
+        glPushMatrix();
+        glMultMatrixf(glm::value_ptr(bread_cfs[i]));
+        bread_objects[i].render(wireframe);
+        glPopMatrix();
+    }
+    cout << endl;
 
     /* must swap buffer at the end of render function */
     glfwSwapBuffers(win);
@@ -217,15 +225,34 @@ void key_handler (GLFWwindow *win, int key, int scan_code, int action, int mods)
             case GLFW_KEY_B:
                 selected_cf_p = &big_butter_cf;
             case GLFW_KEY_0:
+                selected_cf_p = &(bread_cfs[0]);
+                break;
             case GLFW_KEY_1:
+                selected_cf_p = &(bread_cfs[1]);
+                break;
             case GLFW_KEY_2:
+                selected_cf_p = &(bread_cfs[2]);
+                break;
             case GLFW_KEY_3:
+                selected_cf_p = &(bread_cfs[3]);
+                break;
             case GLFW_KEY_4:
+                selected_cf_p = &(bread_cfs[4]);
+                break;
             case GLFW_KEY_5:
+                selected_cf_p = &(bread_cfs[5]);
+                break;
             case GLFW_KEY_6:
+                selected_cf_p = &(bread_cfs[6]);
+                break;
             case GLFW_KEY_7:
+                selected_cf_p = &(bread_cfs[7]);
+                break;
             case GLFW_KEY_8:
+                selected_cf_p = &(bread_cfs[8]);
+                break;
             case GLFW_KEY_9:
+                selected_cf_p = &(bread_cfs[9]);
                 break;
             case GLFW_KEY_LEFT:
                 *selected_cf_p = glm::translate(glm::vec3{-0.2f, 0, 0}) * (*selected_cf_p);
