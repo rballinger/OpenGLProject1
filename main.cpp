@@ -337,7 +337,7 @@ int main() {
     glfwSetErrorCallback(err_function);
     GLFWwindow * win;
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
-    win = glfwCreateWindow(100, 50, "Test", NULL, NULL);
+    win = glfwCreateWindow(100, 50, "Project 1: Objects & Transformations", NULL, NULL);
     if (!win) {
         cerr << "Can't create window" << endl;
         exit (EXIT_FAILURE);
